@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students | Admin Console</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Decorative Orbs -->
+    <div class="bg-decor decor-1"></div>
+    <div class="bg-decor decor-2"></div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="/pages/admin-dashboard.html" class="logo">
+            <i class="fas fa-vote-yea text-gradient"></i> Admin Console
+        </a>
+        <div class="nav-links">
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/pages/admin-dashboard.html" class="sidebar-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/pages/manage-students.html" class="sidebar-link active"><i class="fas fa-user-graduate"></i> Manage Students</a></li>
+                <li><a href="/pages/manage-candidates.html" class="sidebar-link"><i class="fas fa-user-tie"></i> Manage Candidates</a></li>
+                <li><a href="/pages/election-settings.html" class="sidebar-link"><i class="fas fa-cog"></i> Election Settings</a></li>
+                <li><a href="/pages/results.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Results Dashboard</a></li>
+                <li style="margin-top: auto;"><a href="#" onclick="handleLogout()" class="sidebar-link" style="color: var(--danger-color);"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="mb-4" style="text-align: left; margin-bottom: 2rem;">
+                <h1>Manage <span class="text-gradient">Voters Directory</span></h1>
+                <p>Register eligible students, update profiles, toggle status, and run bulk CSV/Excel sheet uploads.</p>
+            </header>
+
+            <!-- Filters & Control bar -->
+            <div class="glass-card mb-4" style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; gap: 0.5rem; width: 100%; max-width: 400px;">
+                    <input type="text" id="student-search-input" class="form-control" placeholder="Search by name or register number..." onkeyup="searchStudents()">
+                </div>
+                
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="openAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
+                    <button class="btn btn-secondary" onclick="openImportModal()"><i class="fas fa-file-import"></i> Bulk Import</button>
+                    
+                    <!-- Templates dropdown -->
+                    <div style="position: relative; display: inline-block;">
+                        <button class="btn btn-secondary" onclick="toggleTemplateMenu()"><i class="fas fa-download"></i> Templates</button>
+                        <div id="template-menu" class="glass-card" style="display: none; position: absolute; right: 0; top: 110%; z-index: 10; min-width: 180px; padding: 0.5rem; text-align: left;">
+                            <a href="/api/admin/students/template?format=xlsx" style="display:block; padding:0.5rem; text-decoration:none; color:var(--text-primary); font-size:0.9rem; font-weight:600;"><i class="far fa-file-excel text-success" style="margin-right:0.5rem;"></i> Excel Sheet (.xlsx)</a>
+                            <a href="/api/admin/students/template?format=csv" style="display:block; padding:0.5rem; text-decoration:none; color:var(--text-primary); font-size:0.9rem; font-weight:600;"><i class="far fa-file-alt text-info" style="margin-right:0.5rem;"></i> CSV Text (.csv)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students List Table -->
+            <div class="glass-card" style="padding: 2rem 1.5rem;">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Register No</th>
+                                <th>Student Name</th>
+                                <th>Department</th>
+                                <th>Year</th>
+                                <th>Email</th>
+                                <th>Voter Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table-body">
+                            <tr>
+                                <td colspan="7" class="text-center">Loading student records...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination controls -->
+                <div class="pagination">
+                    <span id="page-info">Page 1 of 1</span>
+                    <div class="pagination-buttons">
+                        <button id="prev-page-btn" class="btn btn-secondary" style="padding: 0.4rem 1rem;" onclick="changeStudentPage(-1)" disabled>Previous</button>
+                        <button id="next-page-btn" class="btn btn-secondary" style="padding: 0.4rem 1rem;" onclick="changeStudentPage(1)" disabled>Next</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Add/Edit Student Modal -->
+    <div id="student-modal" class="modal-overlay">
+        <div class="glass-card modal-content" style="max-width: 500px;">
+            <h3 id="student-modal-title" class="mb-4">Add New Student</h3>
+            <form id="student-form" onsubmit="saveStudent(event)">
+                <input type="hidden" id="student-id">
+                
+                <div class="form-group">
+                    <label class="form-label" for="student-name-input">Student Name</label>
+                    <input type="text" id="student-name-input" class="form-control" placeholder="e.g. Alice Vance" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="student-reg-input">Register Number</label>
+                    <input type="text" id="student-reg-input" class="form-control" placeholder="e.g. 2026CSE001" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="student-dept-input">Department</label>
+                    <input type="text" id="student-dept-input" class="form-control" placeholder="e.g. Computer Science" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="student-year-input">Year of Study</label>
+                    <select id="student-year-input" class="form-control" required>
+                        <option value="I Year">I Year</option>
+                        <option value="II Year">II Year</option>
+                        <option value="III Year">III Year</option>
+                        <option value="IV Year">IV Year</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="student-email-input">Gmail Address</label>
+                    <input type="email" id="student-email-input" class="form-control" placeholder="e.g. student@gmail.com" required>
+                </div>
+
+                <div class="form-group" id="student-pass-group">
+                    <label class="form-label" for="student-pass-input">Account Password</label>
+                    <input type="password" id="student-pass-input" class="form-control" placeholder="Min 8 characters, numbers & special characters">
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary w-100" onclick="closeStudentModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary w-100">Save Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div id="reset-password-modal" class="modal-overlay">
+        <div class="glass-card modal-content" style="max-width: 450px;">
+            <h3 class="mb-3">Reset Password</h3>
+            <p style="font-size:0.9rem; margin-bottom:1.5rem;">Reset password for student: <strong id="reset-pass-student-name">Student</strong></p>
+            
+            <form id="reset-pass-form" onsubmit="performStudentPasswordReset(event)">
+                <input type="hidden" id="reset-pass-student-id">
+                
+                <div class="form-group">
+                    <label class="form-label" for="reset-pass-input">New Password</label>
+                    <input type="password" id="reset-pass-input" class="form-control" placeholder="Enter new password" required>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary w-100" onclick="closeResetPasswordModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary w-100">Reset Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bulk Import Modal -->
+    <div id="import-modal" class="modal-overlay">
+        <div class="glass-card modal-content" style="max-width: 450px;">
+            <h3 class="mb-3">Import Student Directory</h3>
+            <p style="font-size:0.9rem; margin-bottom:1.5rem;">Upload an Excel sheet (.xlsx) or CSV file. The columns must be in order: <code style="font-weight:700; color:var(--primary-color);">RegisterNo, Name, Department, Year, Email, DOB, Password</code></p>
+            
+            <form id="import-form" onsubmit="handleStudentImport(event)">
+                <div class="form-group">
+                    <label class="form-label" for="import-file">Choose File</label>
+                    <input type="file" id="import-file" class="form-control" accept=".xlsx, .csv" required>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary w-100" onclick="closeImportModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary w-100">Upload & Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Import Summary Modal -->
+    <div id="import-summary-modal" class="modal-overlay">
+        <div class="glass-card modal-content" style="max-width: 500px; text-align: left;">
+            <h3 class="mb-4 text-gradient"><i class="fas fa-file-invoice"></i> Import Summary Results</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                <div style="background: rgba(255,255,255,0.03); border:1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius-sm);">Total Rows Read: <strong id="summary-total">0</strong></div>
+                <div style="background: rgba(16, 185, 129, 0.1); border:1px solid rgba(16, 185, 129, 0.2); padding: 0.75rem; border-radius: var(--radius-sm); color: var(--success-color);">Success Count: <strong id="summary-success">0</strong></div>
+                <div style="background: rgba(245, 158, 11, 0.1); border:1px solid rgba(245, 158, 11, 0.2); padding: 0.75rem; border-radius: var(--radius-sm); color: var(--warning-color);">Duplicates Skipped: <strong id="summary-duplicates">0</strong></div>
+                <div style="background: rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.2); padding: 0.75rem; border-radius: var(--radius-sm); color: var(--danger-color);">Error Failures: <strong id="summary-errors">0</strong></div>
+            </div>
+
+            <div style="max-height: 150px; overflow-y: auto; background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.8rem; font-family: monospace;">
+                <strong style="display: block; margin-bottom: 0.25rem;">Execution Logs:</strong>
+                <ul id="summary-logs" style="list-style-type: none; padding-left: 0; display: flex; flex-direction: column; gap: 0.25rem;">
+                    <!-- Filled dynamically -->
+                </ul>
+            </div>
+
+            <button class="btn btn-primary w-100 mt-4" onclick="closeImportSummaryModal()">Dismiss Summary</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStudentsList();
+        });
+
+        function toggleTemplateMenu() {
+            const menu = document.getElementById('template-menu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', (e) => {
+            const menu = document.getElementById('template-menu');
+            if (menu && menu.style.display === 'block' && !e.target.closest('.template-dropdown') && !e.target.innerText.includes('Templates')) {
+                menu.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

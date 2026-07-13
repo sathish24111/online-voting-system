@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results Dashboard | IT Department Voting System</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Decorative Orbs -->
+    <div class="bg-decor decor-1"></div>
+    <div class="bg-decor decor-2"></div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a id="back-btn" href="#" class="logo">
+            <i class="fas fa-chevron-left text-gradient" style="font-size:1.1rem; margin-right:0.25rem;"></i> Back to Panel
+        </a>
+        <div class="nav-links">
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation (Hidden during print) -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li style="font-weight:700; font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); padding:0.75rem 1rem;">Election Results</li>
+                <li><a href="#" onclick="window.history.back()" class="sidebar-link"><i class="fas fa-arrow-left"></i> Return Back</a></li>
+                <li style="margin-top:auto;"><a href="#" onclick="handleLogout()" class="sidebar-link" style="color: var(--danger-color);"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content" style="max-width: 100%; width: 100%;">
+            <header class="mb-4" style="text-align: left; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h1>Election <span class="text-gradient">Results Dashboard</span></h1>
+                    <p>Track participation rates, identify winners, and download aggregated reports.</p>
+                </div>
+                
+                <!-- Election selection dropdown -->
+                <div style="display: flex; align-items: center; gap: 0.5rem; text-align: left;">
+                    <label for="election-select" style="font-weight: 700; font-size: 0.9rem; min-width: 110px;">Select Election:</label>
+                    <select id="election-select" class="form-control" style="min-width: 250px;">
+                        <!-- Filled dynamically -->
+                        <option value="">Loading elections...</option>
+                    </select>
+                </div>
+            </header>
+
+            <div id="results-view-container">
+                <!-- Turnout Stats -->
+                <div class="metrics-grid">
+                    <div class="glass-card metric-card" style="border-left: 4px solid var(--primary-color); padding: 1.25rem;">
+                        <div class="metric-details" style="text-align: left;">
+                            <p class="text-muted">Total Voters</p>
+                            <h3 id="stat-total-voters">0</h3>
+                        </div>
+                        <i class="fas fa-users metric-icon" style="color: var(--primary-color);"></i>
+                    </div>
+
+                    <div class="glass-card metric-card" style="border-left: 4px solid var(--success-color); padding: 1.25rem;">
+                        <div class="metric-details" style="text-align: left;">
+                            <p class="text-muted">Votes Cast</p>
+                            <h3 id="stat-votes-cast">0</h3>
+                        </div>
+                        <i class="fas fa-vote-yea metric-icon" style="color: var(--success-color);"></i>
+                    </div>
+
+                    <div class="glass-card metric-card" style="border-left: 4px solid var(--warning-color); padding: 1.25rem;">
+                        <div class="metric-details" style="text-align: left;">
+                            <p class="text-muted">Turnout %</p>
+                            <h3 id="stat-turnout-rate">0%</h3>
+                        </div>
+                        <i class="fas fa-percent metric-icon" style="color: var(--warning-color);"></i>
+                    </div>
+
+                    <div class="glass-card metric-card" style="border-left: 4px solid var(--danger-color); padding: 1.25rem;">
+                        <div class="metric-details" style="text-align: left;">
+                            <p class="text-muted">Remaining</p>
+                            <h3 id="stat-votes-remaining">0</h3>
+                        </div>
+                        <i class="fas fa-user-clock metric-icon" style="color: var(--danger-color);"></i>
+                    </div>
+                </div>
+
+                <!-- Winners Banner -->
+                <h3 class="mb-3" style="text-align: left; margin-top: 2rem;"><i class="fas fa-crown text-warning"></i> Elected Officers</h3>
+                <div class="card-grid" id="winners-container" style="margin-bottom: 3rem;">
+                    <!-- Winner cards rendered here -->
+                </div>
+
+                <!-- Charts Layout Grid -->
+                <h3 class="mb-3" style="text-align: left;"><i class="fas fa-chart-pie text-gradient"></i> Detailed Position Tallies</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;" id="charts-container">
+                    <!-- Dynamic Chart.js canvases added here -->
+                </div>
+            </div>
+
+            <!-- Export Buttons Card -->
+            <div id="export-actions-card" class="glass-card mt-5" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 3rem; padding: 2rem;">
+                <div style="text-align: left;">
+                    <h3>Export Election Report</h3>
+                    <p>Download structured results data for academic archives and notice boards.</p>
+                </div>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" onclick="triggerExport('excel')"><i class="far fa-file-excel text-success"></i> Export Excel</button>
+                    <button class="btn btn-secondary" onclick="triggerExport('csv')"><i class="far fa-file-alt text-info"></i> Export CSV</button>
+                    <button class="btn btn-secondary" onclick="triggerExport('pdf')"><i class="far fa-file-pdf text-danger"></i> Export PDF</button>
+                    <button class="btn btn-primary" onclick="printResults()"><i class="fas fa-print"></i> Print Results</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/results.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadResultsPage();
+        });
+    </script>
+</body>
+</html>

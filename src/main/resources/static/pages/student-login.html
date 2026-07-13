@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login | IT Department Voting System</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.5rem;">
+    <!-- Decorative Blurry Orbs -->
+    <div class="bg-decor decor-1"></div>
+    <div class="bg-decor decor-2"></div>
+
+    <div class="glass-card" style="width: 100%; max-width: 420px; padding: 2.5rem 2rem;">
+        <div class="text-center mb-4">
+            <a href="/index.html" style="text-decoration: none; display: inline-block;">
+                <i class="fas fa-vote-yea text-gradient" style="font-size: 2.5rem; margin-bottom: 0.5rem;"></i>
+            </a>
+            <h2>Student Login</h2>
+            <p>Verify your credentials to vote</p>
+        </div>
+
+        <form id="student-login-form" onsubmit="studentLogin(event)">
+            <!-- Register Number -->
+            <div class="form-group">
+                <label for="registerNo" class="form-label">Register Number</label>
+                <div style="position: relative;">
+                    <i class="fas fa-id-card" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                    <input type="text" id="registerNo" class="form-control" placeholder="e.g. 2026CSE001" style="padding-left: 2.8rem;" required>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div style="position: relative; margin-bottom: 0.5rem;">
+                    <i class="fas fa-lock" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                    <input type="password" id="password" class="form-control" placeholder="Enter password" style="padding-left: 2.8rem; padding-right: 2.8rem;" required>
+                    <button type="button" onclick="togglePassVisibility()" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); cursor: pointer;">
+                        <i id="eye-icon" class="far fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Options Link -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-size: 0.85rem;">
+                <label style="display: flex; align-items: center; gap: 0.25rem; cursor: pointer; color: var(--text-secondary);">
+                    <input type="checkbox" onclick="togglePassVisibility()"> Show Password
+                </label>
+                <a href="#" onclick="showForgotMessage(event)" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">Forgot Password?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="/index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+                <i class="fas fa-arrow-left"></i> Back to Homepage
+            </a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        function togglePassVisibility() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'far fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'far fa-eye';
+            }
+        }
+
+        function showForgotMessage(e) {
+            e.preventDefault();
+            showToast('Please contact the Department Administrator to reset your password.', 'info');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | IT Department Voting System</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Decorative Orbs -->
+    <div class="bg-decor decor-1"></div>
+    <div class="bg-decor decor-2"></div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="/pages/admin-dashboard.html" class="logo">
+            <i class="fas fa-vote-yea text-gradient"></i> Admin Console
+        </a>
+        <div class="nav-links">
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="sidebar-toggle" class="theme-toggle d-md-none" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/pages/admin-dashboard.html" class="sidebar-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/pages/manage-students.html" class="sidebar-link"><i class="fas fa-user-graduate"></i> Manage Students</a></li>
+                <li><a href="/pages/manage-candidates.html" class="sidebar-link"><i class="fas fa-user-tie"></i> Manage Candidates</a></li>
+                <li><a href="/pages/election-settings.html" class="sidebar-link"><i class="fas fa-cog"></i> Election Settings</a></li>
+                <li><a href="/pages/results.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Results Dashboard</a></li>
+                <li style="margin-top: auto;"><a href="#" onclick="handleLogout()" class="sidebar-link" style="color: var(--danger-color);"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="mb-4" style="text-align: left; margin-bottom: 2rem;">
+                <h1>Admin <span class="text-gradient">Control Center</span></h1>
+                <p>Monitor real-time participation metrics, track logs, and oversee the current election cycle.</p>
+            </header>
+
+            <!-- Metrics Cards Panel -->
+            <div class="metrics-grid">
+                <!-- Total Students -->
+                <div class="glass-card metric-card" style="border-left: 4px solid var(--primary-color);">
+                    <div class="metric-details" style="text-align: left;">
+                        <p class="text-muted">Total Voters</p>
+                        <h3 id="stat-total-students">0</h3>
+                    </div>
+                    <i class="fas fa-users metric-icon" style="color: var(--primary-color);"></i>
+                </div>
+
+                <!-- Total Candidates -->
+                <div class="glass-card metric-card" style="border-left: 4px solid var(--primary-light);">
+                    <div class="metric-details" style="text-align: left;">
+                        <p class="text-muted">Total Candidates</p>
+                        <h3 id="stat-total-candidates">8</h3>
+                    </div>
+                    <i class="fas fa-user-tag metric-icon" style="color: var(--primary-light);"></i>
+                </div>
+
+                <!-- Ballots Submitted -->
+                <div class="glass-card metric-card" style="border-left: 4px solid var(--success-color);">
+                    <div class="metric-details" style="text-align: left;">
+                        <p class="text-muted">Votes Cast</p>
+                        <h3 id="stat-votes-cast">0</h3>
+                    </div>
+                    <i class="fas fa-ballot metric-icon" style="color: var(--success-color);"><i class="fas fa-vote-yea"></i></i>
+                </div>
+
+                <!-- Participation rate / Status -->
+                <div class="glass-card metric-card" style="border-left: 4px solid var(--warning-color);">
+                    <div class="metric-details" style="text-align: left;">
+                        <p class="text-muted">Pending Votes</p>
+                        <h3 id="stat-votes-pending">0</h3>
+                    </div>
+                    <i class="fas fa-clock metric-icon" style="color: var(--warning-color);"></i>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; margin-top: 2rem;">
+                <!-- Main Action card -->
+                <div class="glass-card" style="text-align: left;">
+                    <h3 class="mb-3">Welcome to the Administrator Panel</h3>
+                    <p class="mb-4">From this console, you can perform structural changes and audits of university elections. Follow these standard workflows to execute the voting process:</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <span class="btn btn-secondary" style="border-radius: 50%; width: 35px; height: 35px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; background: var(--primary-gradient); color: white;">1</span>
+                            <div>
+                                <strong>Import Voters Directory</strong>
+                                <p style="font-size:0.9rem; margin-top:0.25rem;">Visit "Manage Students" to import clean .xlsx or .csv student spreadsheets. Duplicates are auto-skipped.</p>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <span class="btn btn-secondary" style="border-radius: 50%; width: 35px; height: 35px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; background: var(--primary-gradient); color: white;">2</span>
+                            <div>
+                                <strong>Register Candidates</strong>
+                                <p style="font-size:0.9rem; margin-top:0.25rem;">Visit "Manage Candidates" to register candidates, assign their positions, and upload manifestos & profiles.</p>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <span class="btn btn-secondary" style="border-radius: 50%; width: 35px; height: 35px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; background: var(--primary-gradient); color: white;">3</span>
+                            <div>
+                                <strong>Manage Election Status</strong>
+                                <p style="font-size:0.9rem; margin-top:0.25rem;">Use "Election Settings" to schedule start/end dates and toggle election states (Start, Pause, End).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Audits card -->
+                <div class="glass-card" style="text-align: left;">
+                    <h3 class="mb-3"><i class="fas fa-history text-gradient"></i> Recent Activity</h3>
+                    <ul id="recent-activity-container" style="list-style-type: none; padding: 0; margin: 0; display: flex; flex-direction: column;">
+                        <!-- Filled dynamically by admin.js -->
+                        <li>Loading system events...</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAdminDashboard();
+        });
+    </script>
+</body>
+</html>

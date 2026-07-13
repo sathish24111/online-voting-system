@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | IT Department Voting System</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Decorative Orbs -->
+    <div class="bg-decor decor-1"></div>
+    <div class="bg-decor decor-2"></div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="/pages/student-dashboard.html" class="logo">
+            <i class="fas fa-vote-yea text-gradient"></i> Student Portal
+        </a>
+        <div class="nav-links">
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/pages/student-dashboard.html" class="sidebar-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/pages/profile.html" class="sidebar-link active"><i class="fas fa-user"></i> My Profile</a></li>
+
+
+                <li style="margin-top: auto;"><a href="#" onclick="handleLogout()" class="sidebar-link" style="color: var(--danger-color);"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="mb-4" style="text-align: left; margin-bottom: 2rem;">
+                <h1>My <span class="text-gradient">Voter Profile</span></h1>
+                <p>Verify registration credentials and update security settings.</p>
+            </header>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+                <!-- Profile details -->
+                <div class="glass-card" style="text-align: left; padding: 2rem; display:flex; flex-direction:column; justify-content:space-between;">
+                    <div>
+                        <h3 class="mb-4">Verification Credentials</h3>
+                        <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.95rem;">
+                            <div style="display: flex; justify-content: space-between;"><strong class="text-muted">Register Number:</strong> <span id="profile-reg" style="font-weight:600;">2026CSE001</span></div>
+                            <div style="display: flex; justify-content: space-between;"><strong class="text-muted">Student Name:</strong> <span id="profile-name">Alice Vance</span></div>
+                            <div style="display: flex; justify-content: space-between;"><strong class="text-muted">Department:</strong> <span id="profile-dept">Computer Science</span></div>
+                            <div style="display: flex; justify-content: space-between;"><strong class="text-muted">Year:</strong> <span id="profile-year">III Year</span></div>
+                            <div style="display: flex; justify-content: space-between;"><strong class="text-muted">Email:</strong> <span id="profile-email">alice@gmail.com</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Update Form -->
+                <div class="glass-card" style="text-align: left; padding: 2rem;">
+                    <h3 class="mb-3">Change Password</h3>
+                    <p style="font-size:0.85rem; margin-bottom:1.5rem;">New passwords must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.</p>
+                    
+                    <form id="changePasswordForm" onsubmit="changeStudentPassword(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" class="form-control" placeholder="Enter new password" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" style="margin-top: 1rem;">
+                            <i class="fas fa-save"></i> Save Password
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/student.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await requireSession('STUDENT');
+            if (session) {
+                document.getElementById('profile-name').innerText = session.student.name;
+                document.getElementById('profile-reg').innerText = session.student.registerNo;
+                document.getElementById('profile-dept').innerText = session.student.department;
+                document.getElementById('profile-year').innerText = session.student.year;
+                document.getElementById('profile-email').innerText = session.student.email;
+            }
+        });
+    </script>
+</body>
+</html>

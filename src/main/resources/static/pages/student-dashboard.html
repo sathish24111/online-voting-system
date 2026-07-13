@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | IT Department Voting System</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Countdown styling */
+        .countdown-grid {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            min-width: 70px;
+        }
+        .countdown-item span {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+        .countdown-item label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative Orbs -->
+    <div class="bg-decor decor-1"></div>
+    <div class="bg-decor decor-2"></div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="/pages/student-dashboard.html" class="logo">
+            <i class="fas fa-vote-yea text-gradient"></i> Student Portal
+        </a>
+        <div class="nav-links">
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="sidebar-toggle" class="theme-toggle d-md-none" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/pages/student-dashboard.html" class="sidebar-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/pages/profile.html" class="sidebar-link"><i class="fas fa-user"></i> My Profile</a></li>
+
+
+                <li style="margin-top: auto;"><a href="#" onclick="handleLogout()" class="sidebar-link" style="color: var(--danger-color);"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Grid -->
+        <main class="dashboard-content">
+            <header class="mb-4" style="text-align: left; margin-bottom: 2rem;">
+                <h1>Welcome, <span id="student-name" class="text-gradient">Student</span></h1>
+                <p>Verify details, check the election countdown, and click vote when you are ready.</p>
+            </header>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+                <!-- Profile details -->
+                <div class="glass-card" style="text-align: left; padding: 2rem;">
+                    <div style="display: flex; align-items: center; gap: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="candidate-photo-container" style="margin-bottom: 0; width: 80px; height: 80px; border-width: 2px;">
+                            <img id="student-photo" class="candidate-photo" src="/images/default-student.png" alt="Student Profile">
+                        </div>
+                        <div>
+                            <h3 id="student-reg" style="margin-bottom: 0.25rem;">Reg No</h3>
+                            <span id="voting-status" class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; pointer-events: none;">Status</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.95rem;">
+                        <div style="display: flex; justify-content: space-between;"><strong class="text-muted">Department:</strong> <span id="student-dept">Computer Science</span></div>
+                        <div style="display: flex; justify-content: space-between;"><strong class="text-muted">Year:</strong> <span id="student-year">III Year</span></div>
+                        <div style="display: flex; justify-content: space-between;"><strong class="text-muted">Email:</strong> <span id="student-email">student@gmail.com</span></div>
+                    </div>
+                </div>
+
+                <!-- Election Details Panel -->
+                <div class="glass-card" style="text-align: left; display: flex; flex-direction: column; justify-content: space-between; padding: 2rem;">
+                    <div>
+                        <h3 class="mb-2"><i class="fas fa-poll text-gradient"></i> Current Election</h3>
+                        <p id="election-title" style="font-weight: 600; font-size: 1.1rem; color: var(--text-primary);">Loading active election...</p>
+                        
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem; font-size: 0.9rem;">
+                            <span><strong class="text-muted">Status:</strong> <span id="election-status">Active</span></span>
+                        </div>
+
+                        <!-- Timer countdown container -->
+                        <div id="countdown-container" style="margin-top: 1.5rem;">
+                            <strong class="text-muted">Time Remaining to Vote:</strong>
+                            <div class="countdown-grid">
+                                <div class="countdown-item"><span id="timer-days">00</span><label>Days</label></div>
+                                <div class="countdown-item"><span id="timer-hours">00</span><label>Hours</label></div>
+                                <div class="countdown-item"><span id="timer-minutes">00</span><label>Mins</label></div>
+                                <div class="countdown-item"><span id="timer-seconds">00</span><label>Secs</label></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <a id="go-vote-btn" href="/pages/voting.html" class="btn btn-primary w-100" style="padding: 1rem; font-size: 1rem;">
+                            <i class="fas fa-vote-yea"></i> Go to Voting Page
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rules Card -->
+            <div class="glass-card mt-4" style="text-align: left; margin-top: 2rem; padding: 2rem;">
+                <h3 class="mb-3"><i class="fas fa-shield-alt text-gradient"></i> Student Voting Guidelines</h3>
+                <ul style="list-style-type: none; display: flex; flex-direction: column; gap: 0.75rem; color: var(--text-secondary); font-size: 0.95rem; padding-left: 0.5rem;">
+                    <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> You must log in using your Register Number and Password.</li>
+                    <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> A 6-digit OTP code is sent to your registered Gmail address to verify your identity.</li>
+                    <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> You can only submit your ballot **once**. Double voting is blocked by the system database.</li>
+                    <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> True Ballot Secrecy: Your vote selections are stored anonymously, leaving no record matching you to your candidate choices.</li>
+                    <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> Results will be compiled and published only after the election ends.</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/student.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStudentDashboard();
+        });
+    </script>
+</body>
+</html>

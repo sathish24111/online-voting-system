@@ -1,0 +1,7 @@
+/target/
+/.idea/
+/*.iml
+/*.class
+/scratch/
+/database/*.sql.log
+*.log

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Information Technology Department Voting System</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Decorative Blurry Orbs -->
+    <div class="bg-decor decor-1"></div>
+    <div class="bg-decor decor-2"></div>
+
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+        <a href="/index.html" class="logo">
+            <i class="fas fa-vote-yea text-gradient"></i> DeptVote
+        </a>
+        <div class="nav-links">
+            <a href="/index.html" class="nav-link active">Home</a>
+            <a href="/pages/student-login.html" class="nav-link">Student Login</a>
+            <a href="/pages/admin-login.html" class="nav-link">Admin Login</a>
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container main-content">
+        <!-- Voted Success Banner -->
+        <div id="success-banner" class="glass-card mb-5 text-center" style="display: none; border-left: 5px solid var(--success-color); margin-bottom: 2rem;">
+            <i class="fas fa-check-circle text-gradient" style="font-size: 3.5rem; margin-bottom: 1rem; color: var(--success-color);"></i>
+            <h2 class="text-gradient">Vote Recorded Successfully!</h2>
+            <p style="font-size: 1.1rem; color: var(--text-secondary);">Thank you. Your vote has been recorded securely. You have been automatically logged out to protect your ballot secrecy.</p>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="text-center mb-5" style="margin-bottom: 4rem;">
+            <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 1.5rem;">
+                Information Technology <br><span class="text-gradient">Department Voting System</span>
+            </h1>
+            <p style="font-size: 1.2rem; max-width: 750px; margin: 0 auto 2.5rem auto; color: var(--text-secondary);">
+                A secure, transparent, anonymous, and modern online voting platform developed exclusively for the Information Technology Department.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+                <a href="/pages/student-login.html" class="btn btn-primary" style="padding: 0.85rem 2rem; font-size: 1rem;"><i class="fas fa-user-graduate"></i> Student Login</a>
+                <a href="/pages/admin-login.html" class="btn btn-secondary" style="padding: 0.85rem 2rem; font-size: 1rem;"><i class="fas fa-user-shield"></i> Admin Login</a>
+            </div>
+        </section>
+
+        <!-- Real-Time Election Status Dashboard Widget -->
+        <section class="glass-card mb-5" style="margin-bottom: 4rem; padding: 2.5rem 2rem;">
+            <h2 class="text-center mb-4" style="text-align: left; font-size: 1.75rem;"><i class="fas fa-tachometer-alt text-gradient"></i> Election Status</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; text-align: left; margin-bottom: 2rem;">
+                <div class="glass-card" style="padding: 1.25rem; border-left: 3px solid var(--primary-color);">
+                    <span class="text-muted" style="font-size: 0.85rem; font-weight: 600;">ELECTION STATUS</span>
+                    <h3 id="widget-status" style="margin-top: 0.5rem; color: var(--primary-color);">Checking...</h3>
+                </div>
+                <div class="glass-card" style="padding: 1.25rem; border-left: 3px solid var(--success-color);">
+                    <span class="text-muted" style="font-size: 0.85rem; font-weight: 600;">TOTAL ELIGIBLE VOTERS</span>
+                    <h3 id="widget-total" style="margin-top: 0.5rem; color: var(--success-color);">0</h3>
+                </div>
+                <div class="glass-card" style="padding: 1.25rem; border-left: 3px solid var(--warning-color);">
+                    <span class="text-muted" style="font-size: 0.85rem; font-weight: 600;">VOTES CAST</span>
+                    <h3 id="widget-cast" style="margin-top: 0.5rem; color: var(--warning-color);">0</h3>
+                </div>
+                <div class="glass-card" style="padding: 1.25rem; border-left: 3px solid var(--danger-color);">
+                    <span class="text-muted" style="font-size: 0.85rem; font-weight: 600;">REMAINING VOTERS</span>
+                    <h3 id="widget-remaining" style="margin-top: 0.5rem; color: var(--danger-color);">0</h3>
+                </div>
+            </div>
+
+            <!-- Countdown Timer Container -->
+            <div id="countdown-container" class="text-center" style="display: none; background: rgba(37, 99, 235, 0.05); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase;"><i class="far fa-clock"></i> Time Remaining to Cast Ballot</span>
+                <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; font-weight: 800; font-size: 2rem;" class="text-gradient">
+                    <div><span id="timer-hours">00</span><p style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin: 0;">HOURS</p></div>
+                    <div><span id="timer-minutes">00</span><p style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin: 0;">MINS</p></div>
+                    <div><span id="timer-seconds">00</span><p style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin: 0;">SECS</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portals Grid -->
+        <section class="card-grid mb-5" style="margin-bottom: 4rem;">
+            <!-- Student Portal -->
+            <div class="glass-card text-center" style="padding: 3rem 2rem; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <i class="fas fa-user-graduate text-gradient" style="font-size: 3.5rem; margin-bottom: 1.5rem;"></i>
+                    <h2 class="mb-3">Student Portal</h2>
+                    <ul class="mb-4" style="text-align: left; list-style-type: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; color: var(--text-secondary); font-size: 0.95rem;">
+                        <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> Login using your Register Number and Password.</li>
+                        <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> Verify your identity using Gmail OTP.</li>
+                        <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> Cast your vote securely.</li>
+                        <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> Each student can vote only once.</li>
+                    </ul>
+                </div>
+                <a href="/pages/student-login.html" class="btn btn-primary w-100">
+                    Student Login <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Admin Portal -->
+            <div class="glass-card text-center" style="padding: 3rem 2rem; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <i class="fas fa-user-shield text-gradient" style="font-size: 3.5rem; margin-bottom: 1.5rem;"></i>
+                    <h2 class="mb-3">Administrator Portal</h2>
+                    <ul class="mb-4" style="text-align: left; list-style-type: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; color: var(--text-secondary); font-size: 0.95rem;">
+                        <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> Manage students.</li>
+                        <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> Import students from Excel.</li>
+                        <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> Manage candidates.</li>
+                        <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> Start or End Election.</li>
+                        <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> Publish Results.</li>
+                        <li><i class="fas fa-check text-gradient" style="margin-right: 0.5rem;"></i> View reports and export PDF, Excel, and CSV.</li>
+                    </ul>
+                </div>
+                <a href="/pages/admin-login.html" class="btn btn-secondary w-100">
+                    Admin Login <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- New Features Section (Five cards) -->
+        <section class="mb-5" style="margin-bottom: 4rem;">
+            <h2 class="text-center mb-5"><i class="fas fa-star text-gradient"></i> Core System Features</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+                <div class="glass-card text-center candidate-card" style="padding: 2rem 1.5rem;">
+                    <i class="fas fa-envelope-open-text text-gradient" style="font-size: 2.5rem; margin-bottom: 1.25rem;"></i>
+                    <h4 style="margin-bottom: 0.5rem;">Secure Gmail OTP</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Protects login using multi-factor 6-digit verification codes sent to your registered inbox.</p>
+                </div>
+                <div class="glass-card text-center candidate-card" style="padding: 2rem 1.5rem;">
+                    <i class="fas fa-user-check text-gradient" style="font-size: 2.5rem; margin-bottom: 1.25rem;"></i>
+                    <h4 style="margin-bottom: 0.5rem;">One Student One Vote</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Enforces voting integrity by tracking participation per election, blocking double voting.</p>
+                </div>
+                <div class="glass-card text-center candidate-card" style="padding: 2rem 1.5rem;">
+                    <i class="fas fa-user-secret text-gradient" style="font-size: 2.5rem; margin-bottom: 1.25rem;"></i>
+                    <h4 style="margin-bottom: 0.5rem;">Anonymous Voting</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Secures ballot secrecy. Zero database connection exists between voter details and cast choices.</p>
+                </div>
+                <div class="glass-card text-center candidate-card" style="padding: 2rem 1.5rem;">
+                    <i class="fas fa-chart-line text-gradient" style="font-size: 2.5rem; margin-bottom: 1.25rem;"></i>
+                    <h4 style="margin-bottom: 0.5rem;">Real-Time Status</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Displays participation turnout rates publicly, hiding ballot tallies until voting completes.</p>
+                </div>
+                <div class="glass-card text-center candidate-card" style="padding: 2rem 1.5rem;">
+                    <i class="fas fa-shield-alt text-gradient" style="font-size: 2.5rem; margin-bottom: 1.25rem;"></i>
+                    <h4 style="margin-bottom: 0.5rem;">Fast and Secure</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Restricts brute-force login rates, maintains token CSRF security, and ensures low-latency response.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center" style="margin-top: 5rem; padding: 2rem; border-top: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.01);">
+        <p style="margin: 0; font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">
+            &copy; 2026 Information Technology Department | Department Online Voting System
+        </p>
+        <p style="margin: 0.25rem 0 0 0; font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+            KPR College of Arts Science and Research
+        </p>
+    </footer>
+
+    <!-- Global Scripts -->
+    <script src="/js/main.js"></script>
+    <script>
+        // Check if redirected after voting
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('voted') === 'true') {
+            document.getElementById('success-banner').style.display = 'block';
+            showToast('Vote cast successfully. Session logged out.', 'success');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Live Dashboard Statistics AJAX Polling
+        let timerInterval = null;
+
+        async function pollElectionStats() {
+            try {
+                const response = await fetch('/api/public/election-status');
+                const data = await response.json();
+
+                document.getElementById('widget-status').innerText = data.status;
+                document.getElementById('widget-total').innerText = data.totalStudents;
+                document.getElementById('widget-cast').innerText = data.votesCast;
+                document.getElementById('widget-remaining').innerText = data.remainingStudents;
+
+                const statusEl = document.getElementById('widget-status');
+                if (data.status === 'RUNNING') {
+                    statusEl.style.color = 'var(--success-color)';
+                } else if (data.status === 'ENDED') {
+                    statusEl.style.color = 'var(--danger-color)';
+                } else {
+                    statusEl.style.color = 'var(--primary-color)';
+                }
+
+                if (data.active && data.endTime) {
+                    document.getElementById('countdown-container').style.display = 'block';
+                    startTimer(data.endTime);
+                } else {
+                    document.getElementById('countdown-container').style.display = 'none';
+                    if (timerInterval) clearInterval(timerInterval);
+                }
+            } catch (e) {
+                console.error("Failed to fetch public stats: ", e);
+            }
+        }
+
+        function startTimer(endTimeString) {
+            if (timerInterval) clearInterval(timerInterval);
+
+            const endTime = new Date(endTimeString).getTime();
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = endTime - now;
+
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer-hours').innerText = '00';
+                    document.getElementById('timer-minutes').innerText = '00';
+                    document.getElementById('timer-seconds').innerText = '00';
+                    return;
+                }
+
+                const hours = Math.floor(distance / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('timer-hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('timer-minutes').innerText = String(minutes).padStart(2, '0');
+                document.getElementById('timer-seconds').innerText = String(seconds).padStart(2, '0');
+            }
+
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Run stats loader
+        document.addEventListener('DOMContentLoaded', () => {
+            pollElectionStats();
+            // Poll stats every 15 seconds
+            setInterval(pollElectionStats, 15000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Ballot | IT Department Voting System</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Decorative Orbs -->
+    <div class="bg-decor decor-1"></div>
+    <div class="bg-decor decor-2"></div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="/pages/student-dashboard.html" class="logo">
+            <i class="fas fa-vote-yea text-gradient"></i> Student Portal
+        </a>
+        <div class="nav-links">
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/pages/student-dashboard.html" class="sidebar-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/pages/profile.html" class="sidebar-link"><i class="fas fa-user"></i> My Profile</a></li>
+
+
+                <li style="margin-top: auto;"><a href="#" onclick="handleLogout()" class="sidebar-link" style="color: var(--danger-color);"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="mb-4" style="text-align: left; margin-bottom: 2rem;">
+                <h1 id="election-header-title">Election Ballot</h1>
+                <p>Please select exactly one candidate for each position below. Verify choices, then click submit.</p>
+            </header>
+
+            <!-- Dynamic Ballot Section -->
+            <div id="ballot-container">
+                <div class="glass-card text-center">
+                    <div class="spinner" style="margin: 0 auto 1rem auto;"></div>
+                    <p>Compiling candidates directory...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal Overlay -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="glass-card modal-content" style="text-align: left;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <i class="fas fa-exclamation-triangle text-gradient" style="font-size: 3rem; color: var(--warning-color); margin-bottom: 0.5rem;"></i>
+                <h3>Confirm Your Vote</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Please review your selections before casting your ballot.</p>
+            </div>
+
+            <!-- List of selections -->
+            <ul id="review-selections-list" style="list-style-type: none; margin-bottom: 2rem; padding: 0;">
+                <!-- Filled dynamically by voting.js -->
+            </ul>
+
+            <div style="background: rgba(239, 68, 68, 0.1); padding: 0.75rem 1rem; border-radius: var(--radius-md); margin-bottom: 2rem; color: var(--danger-color); font-weight: 600; font-size: 0.85rem; text-align: center; border: 1px solid rgba(239, 68, 68, 0.15);">
+                <i class="fas fa-info-circle"></i> Once submitted, your vote cannot be changed or recalled.
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-secondary w-100" onclick="closeConfirmationModal()">Cancel</button>
+                <button class="btn btn-primary w-100" onclick="submitBallot()">Cast Vote</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/voting.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadVotingPage();
+        });
+    </script>
+</body>
+</html>

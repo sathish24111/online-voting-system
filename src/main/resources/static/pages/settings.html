@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings | Admin Console</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Decorative Orbs -->
+    <div class="bg-decor decor-1"></div>
+    <div class="bg-decor decor-2"></div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="/pages/admin-dashboard.html" class="logo">
+            <i class="fas fa-vote-yea text-gradient"></i> Admin Console
+        </a>
+        <div class="nav-links">
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/pages/admin-dashboard.html" class="sidebar-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/pages/manage-students.html" class="sidebar-link"><i class="fas fa-user-graduate"></i> Manage Students</a></li>
+                <li><a href="/pages/manage-candidates.html" class="sidebar-link"><i class="fas fa-user-tie"></i> Manage Candidates</a></li>
+                <li><a href="/pages/election-settings.html" class="sidebar-link"><i class="fas fa-cog"></i> Election Settings</a></li>
+                <li><a href="/pages/results.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Results Dashboard</a></li>
+                <li style="margin-top: auto;"><a href="#" onclick="handleLogout()" class="sidebar-link" style="color: var(--danger-color);"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="mb-4" style="text-align: left; margin-bottom: 2rem;">
+                <h1>System <span class="text-gradient">Settings</span></h1>
+                <p>Configure general parameters and update administrator credentials.</p>
+            </header>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; align-items: start;">
+                <!-- General Info Card -->
+                <div class="glass-card" style="text-align: left; padding: 2rem;">
+                    <h3 class="mb-3">Admin Info</h3>
+                    <p class="mb-4">Standard account details for the system supervisor:</p>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.95rem;">
+                        <div style="display: flex; justify-content: space-between;"><strong class="text-muted">Username:</strong> <span>admin</span></div>
+                        <div style="display: flex; justify-content: space-between;"><strong class="text-muted">Role Authority:</strong> <span>ROLE_ADMIN</span></div>
+                        <div style="display: flex; justify-content: space-between;"><strong class="text-muted">System State:</strong> <span style="color:var(--success-color); font-weight:700;">Operational</span></div>
+                    </div>
+                </div>
+
+                <!-- Admin Password change -->
+                <div class="glass-card" style="text-align: left; padding: 2rem;">
+                    <h3 class="mb-3">Update Credentials</h3>
+                    <p style="font-size:0.85rem; margin-bottom:1.5rem;">To change the default admin password, configure the updates below. Must be at least 8 characters long.</p>
+                    
+                    <form id="adminPasswordForm" onsubmit="changeAdminPassword(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="admin-pass">New Password</label>
+                            <input type="password" id="admin-pass" class="form-control" placeholder="Enter new password" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="admin-pass-confirm">Confirm Password</label>
+                            <input type="password" id="admin-pass-confirm" class="form-control" placeholder="Confirm new password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" style="margin-top: 1rem;">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            requireSession('ADMIN');
+        });
+
+        async function changeAdminPassword(event) {
+            event.preventDefault();
+            const pass = document.getElementById('admin-pass').value;
+            const confirm = document.getElementById('admin-pass-confirm').value;
+
+            if (pass !== confirm) {
+                showToast('Passwords do not match.', 'error');
+                return;
+            }
+
+            if (pass.length < 8) {
+                showToast('Password must contain at least 8 characters.', 'error');
+                return;
+            }
+
+            showLoading(true);
+            try {
+                // Admin can change their own password
+                const response = await fetch('/api/admin/change-password', { // we can write a simple endpoint or use student mapping but admin change-password is more specific. Let's make sure it handles it!
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-XSRF-TOKEN': getCsrfToken()
+                    },
+                    body: JSON.stringify({ password: pass })
+                });
+
+                if (response.ok) {
+                    showToast('Admin password changed successfully.', 'success');
+                    document.getElementById('adminPasswordForm').reset();
+                } else {
+                    showToast('Failed to update admin password.', 'error');
+                }
+            } catch (e) {
+                showToast('Connection lost.', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+    </script>
+</body>
+</html>

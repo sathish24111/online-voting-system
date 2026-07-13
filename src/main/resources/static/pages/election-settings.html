@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Settings | Admin Console</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Decorative Orbs -->
+    <div class="bg-decor decor-1"></div>
+    <div class="bg-decor decor-2"></div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="/pages/admin-dashboard.html" class="logo">
+            <i class="fas fa-vote-yea text-gradient"></i> Admin Console
+        </a>
+        <div class="nav-links">
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/pages/admin-dashboard.html" class="sidebar-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/pages/manage-students.html" class="sidebar-link"><i class="fas fa-user-graduate"></i> Manage Students</a></li>
+                <li><a href="/pages/manage-candidates.html" class="sidebar-link"><i class="fas fa-user-tie"></i> Manage Candidates</a></li>
+                <li><a href="/pages/election-settings.html" class="sidebar-link active"><i class="fas fa-cog"></i> Election Settings</a></li>
+                <li><a href="/pages/results.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Results Dashboard</a></li>
+                <li style="margin-top: auto;"><a href="#" onclick="handleLogout()" class="sidebar-link" style="color: var(--danger-color);"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="mb-4" style="text-align: left; margin-bottom: 2rem;">
+                <h1>Election <span class="text-gradient">Settings & Schedules</span></h1>
+                <p>Schedule new election periods, modify timings, and trigger real-time lifecycle state changes.</p>
+            </header>
+
+            <!-- Filters & Control bar -->
+            <div class="glass-card mb-4" style="padding: 1.5rem; display: flex; justify-content: flex-end; align-items: center; gap: 1rem;">
+                <button class="btn btn-primary" onclick="openAddElectionModal()"><i class="fas fa-plus"></i> Create New Election</button>
+            </div>
+
+            <!-- Elections List Table -->
+            <div class="glass-card" style="padding: 2rem 1.5rem;">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Election Title</th>
+                                <th>Active Status</th>
+                                <th>Start Date & Time</th>
+                                <th>End Date & Time</th>
+                                <th>Lifecycle Override</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="elections-table-body">
+                            <tr>
+                                <td colspan="6" class="text-center">Loading elections...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Create/Edit Election Modal -->
+    <div id="election-modal" class="modal-overlay">
+        <div class="glass-card modal-content" style="max-width: 480px;">
+            <h3 id="election-modal-title" class="mb-4">Create New Election</h3>
+            <form id="election-form" onsubmit="saveElection(event)">
+                <input type="hidden" id="election-id">
+
+                <div class="form-group">
+                    <label class="form-label" for="election-title-input">Election Title</label>
+                    <input type="text" id="election-title-input" class="form-control" placeholder="e.g. CSE Union Election 2026" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="election-start-input">Start Date & Time</label>
+                    <input type="datetime-local" id="election-start-input" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="election-end-input">End Date & Time</label>
+                    <input type="datetime-local" id="election-end-input" class="form-control" required>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary w-100" onclick="closeElectionModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary w-100">Save Election</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadElectionSettings();
+        });
+    </script>
+</body>
+</html>
