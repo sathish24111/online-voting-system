@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://it-voting-backend.onrender.com/api/:path*"
+      "destination": "https://online-voting-system-17gl.onrender.com/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://it-voting-backend.onrender.com/uploads/:path*"
+      "destination": "https://online-voting-system-17gl.onrender.com/uploads/:path*"
     }
   ]
 }
