@@ -562,18 +562,81 @@ tr:last-child td {
     }
 }
 
-/* Responsive sidebar */
+/* Responsive sidebar and general mobile optimizations */
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
+        transition: transform var(--transition-normal);
+        height: 100vh;
+        top: 0;
+        padding-top: 80px;
     }
     .sidebar.open {
         transform: translateX(0);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.25);
     }
     .dashboard-content {
         margin-left: 0;
         max-width: 100%;
         padding: 1.5rem;
+    }
+    #sidebar-toggle {
+        display: flex !important;
+    }
+    
+    /* Typography sizing on mobile */
+    h1 {
+        font-size: 2rem !important;
+    }
+    h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    /* Hero section and containers adjustments */
+    section[style*="margin-bottom: 4rem"] {
+        margin-bottom: 2rem !important;
+    }
+    
+    .navbar {
+        padding: 0 1rem !important;
+    }
+    
+    /* Form rows stacking */
+    .form-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    /* Metrics grids and summaries on mobile */
+    .metrics-grid, .card-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.25rem !important;
+    }
+    
+    /* Adjust tables for smaller screens */
+    th, td {
+        padding: 0.75rem 1rem !important;
+        font-size: 0.85rem;
+    }
+    
+    /* Modals adjustment */
+    .modal-content {
+        padding: 1.75rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .glass-card {
+        padding: 1.5rem !important;
+    }
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Adjust logo size */
+    .logo {
+        font-size: 1.1rem !important;
     }
 }
 
