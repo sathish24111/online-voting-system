@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://online-voting-system-17gl.onrender.com/api/:path*"
+      "destination": "https://good-insects-wish.loca.lt/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://online-voting-system-17gl.onrender.com/uploads/:path*"
+      "destination": "https://good-insects-wish.loca.lt/uploads/:path*"
     }
   ]
 }
