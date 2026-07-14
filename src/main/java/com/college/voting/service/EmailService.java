@@ -64,7 +64,7 @@ public class EmailService {
 
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "utf-8");
             helper.setFrom(mailUsername);
             helper.setTo(recipientEmail);
             helper.setSubject(subject);
@@ -80,7 +80,7 @@ public class EmailService {
                 try {
                     JavaMailSenderImpl secondarySender = createSecondaryMailSender();
                     MimeMessage mimeMessage = secondarySender.createMimeMessage();
-                    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+                    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "utf-8");
                     helper.setFrom(mailUsernameSecondary);
                     helper.setTo(recipientEmail);
                     helper.setSubject(subject);
