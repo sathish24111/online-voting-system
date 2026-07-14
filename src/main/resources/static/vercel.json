@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://good-insects-wish.loca.lt/api/:path*"
+      "destination": "https://breezy-horses-fold.loca.lt/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://good-insects-wish.loca.lt/uploads/:path*"
+      "destination": "https://breezy-horses-fold.loca.lt/uploads/:path*"
     }
   ]
 }
