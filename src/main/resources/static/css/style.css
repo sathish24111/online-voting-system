@@ -704,6 +704,82 @@ tr:last-child td {
     .logo {
         font-size: 1.1rem !important;
     }
+
+    .wizard-buttons {
+        flex-direction: column !important;
+        width: 100%;
+        gap: 0.75rem !important;
+    }
+    .wizard-buttons .btn {
+        width: 100% !important;
+        margin-bottom: 0 !important;
+    }
+}
+
+/* Wizard Progress Indicator */
+.progress-bar-wrapper {
+    margin-bottom: 2rem;
+}
+
+.progress-text {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.progress-bar-track {
+    background: rgba(148, 163, 184, 0.15);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.progress-bar-fill {
+    background: var(--primary-color);
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+/* Review Table Styles */
+.review-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.review-table th, .review-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.review-table th {
+    font-weight: 700;
+    color: var(--text-primary);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+html[data-theme="dark"] .review-table th {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.review-change-btn {
+    background: transparent;
+    border: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s;
+}
+
+.review-change-btn:hover {
+    background: rgba(37, 99, 235, 0.1);
 }
 
 /* Print Stylesheet overrides */

@@ -42,8 +42,19 @@
         <main class="dashboard-content">
             <header class="mb-4" style="text-align: left; margin-bottom: 2rem;">
                 <h1 id="election-header-title">Election Ballot</h1>
-                <p>Please select exactly one candidate for each position below. Verify choices, then click submit.</p>
+                <p id="election-header-desc">Please complete all steps to securely cast your ballot.</p>
             </header>
+
+            <!-- Progress Indicator -->
+            <div id="progress-wrapper" class="progress-bar-wrapper" style="display: none;">
+                <div class="progress-text">
+                    <span id="progress-label" style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em;">Step Progress</span>
+                    <span id="step-indicator">Step 0 of 0</span>
+                </div>
+                <div class="progress-bar-track">
+                    <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+            </div>
 
             <!-- Dynamic Ballot Section -->
             <div id="ballot-container">
@@ -53,31 +64,6 @@
                 </div>
             </div>
         </main>
-    </div>
-
-    <!-- Confirmation Modal Overlay -->
-    <div id="confirm-modal" class="modal-overlay">
-        <div class="glass-card modal-content" style="text-align: left;">
-            <div style="text-align: center; margin-bottom: 1.5rem;">
-                <i class="fas fa-exclamation-triangle text-gradient" style="font-size: 3rem; color: var(--warning-color); margin-bottom: 0.5rem;"></i>
-                <h3>Confirm Your Vote</h3>
-                <p style="font-size: 0.9rem; color: var(--text-muted);">Please review your selections before casting your ballot.</p>
-            </div>
-
-            <!-- List of selections -->
-            <ul id="review-selections-list" style="list-style-type: none; margin-bottom: 2rem; padding: 0;">
-                <!-- Filled dynamically by voting.js -->
-            </ul>
-
-            <div style="background: rgba(239, 68, 68, 0.1); padding: 0.75rem 1rem; border-radius: var(--radius-md); margin-bottom: 2rem; color: var(--danger-color); font-weight: 600; font-size: 0.85rem; text-align: center; border: 1px solid rgba(239, 68, 68, 0.15);">
-                <i class="fas fa-info-circle"></i> Once submitted, your vote cannot be changed or recalled.
-            </div>
-
-            <div style="display: flex; gap: 1rem;">
-                <button class="btn btn-secondary w-100" onclick="closeConfirmationModal()">Cancel</button>
-                <button class="btn btn-primary w-100" onclick="submitBallot()">Cast Vote</button>
-            </div>
-        </div>
     </div>
 
     <!-- Scripts -->
