@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Vote Records | Admin Console</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .collapsible-section {
+            transition: all 0.3s ease;
+        }
+        .section-header {
+            padding: 0.5rem 0.25rem;
+            user-select: none;
+        }
+        .section-header h3 {
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .section-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .badge-year {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.50rem;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        .badge-dept {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .table-container table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+        .table-container table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative Orbs -->
+    <div class="bg-decor decor-1"></div>
+    <div class="bg-decor decor-2"></div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="/pages/admin-dashboard.html" class="logo">
+            <i class="fas fa-vote-yea text-gradient"></i> Admin Console
+        </a>
+        <div class="nav-links">
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/pages/admin-dashboard.html" class="sidebar-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/pages/manage-students.html" class="sidebar-link"><i class="fas fa-user-graduate"></i> Manage Students</a></li>
+                <li><a href="/pages/manage-candidates.html" class="sidebar-link"><i class="fas fa-user-tie"></i> Manage Candidates</a></li>
+                <li><a href="/pages/election-settings.html" class="sidebar-link"><i class="fas fa-cog"></i> Election Settings</a></li>
+                <li><a href="/pages/results.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Results Dashboard</a></li>
+                <li><a href="/pages/vote-records.html" class="sidebar-link active"><i class="fas fa-clipboard-list"></i> Vote Records</a></li>
+                <li style="margin-top: auto;"><a href="#" onclick="handleLogout()" class="sidebar-link" style="color: var(--danger-color);"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="mb-4" style="text-align: left; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h1>Detailed <span class="text-gradient">Vote Records</span></h1>
+                    <p>Track student participation, audit cast ballots, and group vote records by academic year in real-time.</p>
+                </div>
+
+                <!-- Election Selection -->
+                <div style="display: flex; align-items: center; gap: 0.5rem; text-align: left;">
+                    <label for="election-select" style="font-weight: 700; font-size: 0.9rem; min-width: 110px;">Select Election:</label>
+                    <select id="election-select" class="form-control" style="min-width: 250px;">
+                        <option value="">Loading elections...</option>
+                    </select>
+                </div>
+            </header>
+
+            <!-- Metrics Panel -->
+            <div class="metrics-grid mb-4">
+                <div class="glass-card metric-card" style="border-left: 4px solid var(--primary-color); padding: 1.25rem;">
+                    <div class="metric-details" style="text-align: left;">
+                        <p class="text-muted">Total Voters</p>
+                        <h3 id="stat-total-voters">0</h3>
+                    </div>
+                    <i class="fas fa-users metric-icon" style="color: var(--primary-color);"></i>
+                </div>
+
+                <div class="glass-card metric-card" style="border-left: 4px solid var(--success-color); padding: 1.25rem;">
+                    <div class="metric-details" style="text-align: left;">
+                        <p class="text-muted">1st Year Voters</p>
+                        <h3 id="stat-1st-year-voters">0</h3>
+                    </div>
+                    <i class="fas fa-user-graduate metric-icon" style="color: var(--success-color);"></i>
+                </div>
+
+                <div class="glass-card metric-card" style="border-left: 4px solid var(--warning-color); padding: 1.25rem;">
+                    <div class="metric-details" style="text-align: left;">
+                        <p class="text-muted">2nd Year Voters</p>
+                        <h3 id="stat-2nd-year-voters">0</h3>
+                    </div>
+                    <i class="fas fa-user-graduate metric-icon" style="color: var(--warning-color);"></i>
+                </div>
+
+                <div class="glass-card metric-card" style="border-left: 4px solid var(--danger-color); padding: 1.25rem;">
+                    <div class="metric-details" style="text-align: left;">
+                        <p class="text-muted">3rd Year Voters</p>
+                        <h3 id="stat-3rd-year-voters">0</h3>
+                    </div>
+                    <i class="fas fa-user-graduate metric-icon" style="color: var(--danger-color);"></i>
+                </div>
+            </div>
+
+            <!-- Filters & Controls -->
+            <div class="glass-card mb-4" style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; gap: 1rem; width: 100%; max-width: 600px;">
+                    <div style="position: relative; flex-grow: 1;">
+                        <input type="text" id="search-input" class="form-control" placeholder="Search by Student Name, Roll No, Dept, or Candidate..." style="padding-left: 2.5rem;">
+                        <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                    </div>
+                </div>
+                <div>
+                    <select id="sort-select" class="form-control" style="min-width: 180px;">
+                        <option value="votedAt-desc">Sort by: Vote Time (Latest)</option>
+                        <option value="votedAt-asc">Sort by: Vote Time (Oldest)</option>
+                        <option value="studentName-asc">Sort by: Name (A-Z)</option>
+                        <option value="studentName-desc">Sort by: Name (Z-A)</option>
+                        <option value="department-asc">Sort by: Department (A-Z)</option>
+                        <option value="department-desc">Sort by: Department (Z-A)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Collapsible Cards Grouped by Academic Year -->
+            <div id="sections-container">
+                <!-- 1st Year Card -->
+                <div class="glass-card mb-4 collapsible-section" id="section-1st-year">
+                    <div class="section-header" onclick="toggleSection('1st-year')" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                        <h3 style="margin:0;">
+                            <i class="fas fa-graduation-cap text-gradient"></i> 1st Year Students 
+                            <span id="count-1st-year" class="badge-year" style="background:var(--success-color); color:white;">0</span>
+                        </h3>
+                        <i class="fas fa-chevron-down" id="arrow-1st-year" style="transition: transform 0.2s ease;"></i>
+                    </div>
+                    <div class="section-content" id="content-1st-year" style="margin-top:1.5rem; transition: max-height 0.3s ease-out;">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 70px;">S.No</th>
+                                        <th>Student Name</th>
+                                        <th>Roll Number</th>
+                                        <th>Department</th>
+                                        <th>Candidate Voted</th>
+                                        <th>Vote Cast Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body-1st-year">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">No votes have been cast by 1st Year students yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2nd Year Card -->
+                <div class="glass-card mb-4 collapsible-section" id="section-2nd-year">
+                    <div class="section-header" onclick="toggleSection('2nd-year')" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                        <h3 style="margin:0;">
+                            <i class="fas fa-graduation-cap text-gradient"></i> 2nd Year Students 
+                            <span id="count-2nd-year" class="badge-year" style="background:var(--warning-color); color:white;">0</span>
+                        </h3>
+                        <i class="fas fa-chevron-down" id="arrow-2nd-year" style="transition: transform 0.2s ease;"></i>
+                    </div>
+                    <div class="section-content" id="content-2nd-year" style="margin-top:1.5rem; transition: max-height 0.3s ease-out;">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 70px;">S.No</th>
+                                        <th>Student Name</th>
+                                        <th>Roll Number</th>
+                                        <th>Department</th>
+                                        <th>Candidate Voted</th>
+                                        <th>Vote Cast Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body-2nd-year">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">No votes have been cast by 2nd Year students yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3rd Year Card -->
+                <div class="glass-card mb-4 collapsible-section" id="section-3rd-year">
+                    <div class="section-header" onclick="toggleSection('3rd-year')" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                        <h3 style="margin:0;">
+                            <i class="fas fa-graduation-cap text-gradient"></i> 3rd Year Students 
+                            <span id="count-3rd-year" class="badge-year" style="background:var(--danger-color); color:white;">0</span>
+                        </h3>
+                        <i class="fas fa-chevron-down" id="arrow-3rd-year" style="transition: transform 0.2s ease;"></i>
+                    </div>
+                    <div class="section-content" id="content-3rd-year" style="margin-top:1.5rem; transition: max-height 0.3s ease-out;">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 70px;">S.No</th>
+                                        <th>Student Name</th>
+                                        <th>Roll Number</th>
+                                        <th>Department</th>
+                                        <th>Candidate Voted</th>
+                                        <th>Vote Cast Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body-3rd-year">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">No votes have been cast by 3rd Year students yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/vote-records.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initVoteRecordsPage();
+        });
+    </script>
+</body>
+</html>

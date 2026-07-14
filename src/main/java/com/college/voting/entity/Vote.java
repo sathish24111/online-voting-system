@@ -1,5 +1,6 @@
 package com.college.voting.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -19,6 +20,11 @@ public class Vote {
     @JoinColumn(name = "candidate_id", nullable = false)
     private Candidate candidate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", nullable = true)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Student student;
+
     @Column(nullable = false, length = 100)
     private String position;
 
@@ -31,6 +37,13 @@ public class Vote {
         this.election = election;
         this.candidate = candidate;
         this.position = position;
+    }
+
+    public Vote(Election election, Candidate candidate, String position, Student student) {
+        this.election = election;
+        this.candidate = candidate;
+        this.position = position;
+        this.student = student;
     }
 
     public Long getId() {
@@ -71,5 +84,13 @@ public class Vote {
 
     public void setVoteTime(LocalDateTime voteTime) {
         this.voteTime = voteTime;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }

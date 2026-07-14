@@ -20,4 +20,7 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     List<Object[]> countVotesGroupByPosition(@Param("electionId") Long electionId);
     
     List<Vote> findByElectionId(Long electionId);
+
+    @Query("SELECT v FROM Vote v JOIN FETCH v.student JOIN FETCH v.candidate WHERE v.election.id = :electionId")
+    List<Vote> findVotesWithStudentAndCandidateByElectionId(@Param("electionId") Long electionId);
 }

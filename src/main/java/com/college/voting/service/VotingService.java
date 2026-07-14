@@ -83,7 +83,7 @@ public class VotingService {
             votedPositions.add(position);
             
             // Build anonymous vote row
-            votesToSave.add(new Vote(election, candidate, position));
+            votesToSave.add(new Vote(election, candidate, position, student));
         }
 
         // 5. Record Student Participation

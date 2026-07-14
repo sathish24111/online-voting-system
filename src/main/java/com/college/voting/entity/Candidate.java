@@ -1,5 +1,6 @@
 package com.college.voting.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +13,7 @@ public class Candidate {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "election_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Election election;
 
     @Column(nullable = false, length = 100)

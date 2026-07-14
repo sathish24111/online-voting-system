@@ -91,7 +91,7 @@ public class SecurityConfig {
 
                 // Static student and admin files are restricted to appropriate roles
                 .requestMatchers("/pages/student-dashboard.html", "/pages/voting.html", "/pages/already-voted.html", "/pages/profile.html").hasRole("STUDENT")
-                .requestMatchers("/pages/admin-dashboard.html", "/pages/manage-students.html", "/pages/manage-candidates.html", "/pages/election-settings.html", "/pages/results.html", "/pages/settings.html").hasRole("ADMIN")
+                .requestMatchers("/pages/admin-dashboard.html", "/pages/manage-students.html", "/pages/manage-candidates.html", "/pages/election-settings.html", "/pages/results.html", "/pages/settings.html", "/pages/vote-records.html").hasRole("ADMIN")
                 
                 // Restricted Admin API paths
                 .requestMatchers("/api/admin/**", "/api/election/**").hasRole("ADMIN")
