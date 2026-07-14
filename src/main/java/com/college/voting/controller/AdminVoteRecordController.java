@@ -68,14 +68,15 @@ public class AdminVoteRecordController {
                     .orElse(LocalDateTime.now());
 
                 String academicYear = student.getYear();
-                if ("1".equals(academicYear)) {
-                    academicYear = "1st Year";
-                } else if ("2".equals(academicYear)) {
-                    academicYear = "2nd Year";
-                } else if ("3".equals(academicYear)) {
-                    academicYear = "3rd Year";
-                } else if (academicYear != null && !academicYear.toLowerCase().contains("year")) {
-                    academicYear = academicYear + " Year";
+                if (academicYear != null) {
+                    String y = academicYear.trim().toUpperCase();
+                    if (y.startsWith("III") || y.startsWith("3")) {
+                        academicYear = "3rd Year";
+                    } else if (y.startsWith("II") || y.startsWith("2")) {
+                        academicYear = "2nd Year";
+                    } else if (y.startsWith("I") || y.startsWith("1")) {
+                        academicYear = "1st Year";
+                    }
                 }
 
                 return new VoteRecordDTO(
