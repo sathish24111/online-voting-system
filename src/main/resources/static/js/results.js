@@ -216,13 +216,35 @@ function renderResultsDashboard() {
 }
 
 // Download Exporters
-function triggerExport(format) {
+async function triggerExport(format) {
     const dropdown = document.getElementById('election-select');
     const electionId = dropdown.value;
     if (!electionId) return;
 
-    window.location.href = `/api/results/${electionId}/export/${format}`;
-    showToast(`Downloading results report as ${format.toUpperCase()}...`, 'success');
+    showToast(`Preparing results report as ${format.toUpperCase()}...`, 'info');
+    try {
+        const response = await fetch(`/api/results/${electionId}/export/${format}`);
+        if (!response.ok) throw new Error("Failed to generate download.");
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        
+        let extension = format;
+        if (format === 'excel') extension = 'xlsx';
+        a.download = `results_election_${electionId}.${extension}`;
+        
+        document.body.appendChild(a);
+        a.click();
+        
+        window.URL.revokeObjectURL(url);
+        a.remove();
+        showToast(`Results report downloaded successfully.`, 'success');
+    } catch (e) {
+        showToast('Failed to download results: ' + e.message, 'error');
+    }
 }
 
 function printResults() {
