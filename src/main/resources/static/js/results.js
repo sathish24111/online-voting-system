@@ -134,27 +134,31 @@ function renderResultsDashboard() {
     }
 
     for (const [position, candidates] of Object.entries(positions)) {
-        // Find Winner
-        const winner = candidates.find(c => c.label === 'WINNER');
+        // Find all Winners or Ties
+        const winners = candidates.filter(c => c.label === 'WINNER' || c.label === 'TIE');
         
-        if (winner) {
-            // Render Winner Card
+        winners.forEach(winner => {
+            const isTie = winner.label === 'TIE';
+            const badgeText = isTie ? '<i class="fas fa-handshake"></i> Tie' : '<i class="fas fa-crown text-warning"></i> Winner';
+            const badgeColor = isTie ? 'var(--warning-color)' : 'var(--success-color)';
+            const borderColor = isTie ? 'var(--warning-color)' : 'var(--success-color)';
+            
             const winnerCard = document.createElement('div');
             winnerCard.className = 'glass-card candidate-card';
             winnerCard.style.padding = '1.5rem';
             winnerCard.innerHTML = `
-                <span class="candidate-badge"><i class="fas fa-crown text-warning"></i> Winner</span>
-                <div class="candidate-photo-container" style="width:90px; height:90px; border-color:var(--success-color);">
+                <span class="candidate-badge" style="background:${badgeColor}; color:white;">${badgeText}</span>
+                <div class="candidate-photo-container" style="width:90px; height:90px; border-color:${borderColor};">
                     <img class="candidate-photo" src="${winner.photo || '/images/default-candidate.png'}" alt="${winner.name}">
                 </div>
                 <h4 style="font-size:1.1rem; margin-bottom:0.25rem;">${winner.name}</h4>
                 <p style="font-size:0.8rem; font-weight:600; text-transform:uppercase; color:var(--text-muted);">${position}</p>
-                <p style="font-size:0.85rem; color:var(--success-color); font-weight:700; margin-top:0.5rem;">
+                <p style="font-size:0.85rem; color:${borderColor}; font-weight:700; margin-top:0.5rem;">
                     ${winner.voteCount} Votes (${winner.percentage}%)
                 </p>
             `;
             winnerGrid.appendChild(winnerCard);
-        }
+        });
 
         // Render Chart Container
         const chartWrapper = document.createElement('div');

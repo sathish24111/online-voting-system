@@ -157,11 +157,29 @@ public class ResultService {
             // Sort candidates by vote count descending
             candResults.sort(Comparator.comparingLong(CandidateResult::getVoteCount).reversed());
 
-            // Label Winner and Runner-up
+            // Label Winner and Runner-up with tie detection
             if (!candResults.isEmpty() && candResults.get(0).getVoteCount() > 0) {
-                candResults.get(0).setLabel("WINNER");
-                if (candResults.size() > 1 && candResults.get(1).getVoteCount() > 0) {
-                    candResults.get(1).setLabel("RUNNER_UP");
+                long maxVotes = candResults.get(0).getVoteCount();
+                List<CandidateResult> maxVoteCandidates = candResults.stream()
+                    .filter(cr -> cr.getVoteCount() == maxVotes)
+                    .toList();
+
+                if (maxVoteCandidates.size() > 1) {
+                    // Tie for the first place
+                    for (CandidateResult cr : maxVoteCandidates) {
+                        cr.setLabel("TIE");
+                    }
+                } else {
+                    // Single Winner
+                    candResults.get(0).setLabel("WINNER");
+                    if (candResults.size() > 1 && candResults.get(1).getVoteCount() > 0) {
+                        long runnerUpVotes = candResults.get(1).getVoteCount();
+                        for (CandidateResult cr : candResults) {
+                            if (cr.getVoteCount() == runnerUpVotes) {
+                                cr.setLabel("RUNNER_UP");
+                            }
+                        }
+                    }
                 }
             }
 
