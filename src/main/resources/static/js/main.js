@@ -15,6 +15,7 @@ window.fetch = async function (resource, options = {}) {
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     setupMobileSidebar();
+    setupMobileNavMenu();
 });
 
 // CSRF Utility
@@ -119,6 +120,24 @@ function setupMobileSidebar() {
         document.addEventListener('click', (e) => {
             if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== toggleBtn) {
                 sidebar.classList.remove('open');
+            }
+        });
+    }
+}
+
+// Mobile Responsive Public Nav Menu Toggle
+function setupMobileNavMenu() {
+    const toggleBtn = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    if (toggleBtn && navMenu) {
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navMenu.classList.toggle('open');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && e.target !== toggleBtn) {
+                navMenu.classList.remove('open');
             }
         });
     }

@@ -19,12 +19,17 @@
         <a href="/index.html" class="logo">
             <i class="fas fa-vote-yea text-gradient"></i> DeptVote
         </a>
-        <div class="nav-links">
+        <div class="nav-links" id="nav-menu">
             <a href="/index.html" class="nav-link active">Home</a>
             <a href="/pages/student-login.html" class="nav-link">Student Login</a>
             <a href="/pages/admin-login.html" class="nav-link">Admin Login</a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; z-index: 101;">
             <button id="theme-toggle" class="theme-toggle">
                 <i class="fas fa-moon"></i>
+            </button>
+            <button id="nav-toggle" class="theme-toggle" style="display: none;">
+                <i class="fas fa-bars"></i>
             </button>
         </div>
     </nav>
