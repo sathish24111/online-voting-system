@@ -1,4 +1,4 @@
-const { spawn } = require('child_process');
+const { spawn, exec } = require('child_process');
 
 const PORT = 8080;
 const SUBDOMAIN = 'kprcasitvoting-v2';
@@ -19,8 +19,12 @@ function startTunnel() {
                 console.log(`Successfully connected to expected URL: ${EXPECTED_URL}`);
                 gotExpectedUrl = true;
             } else {
-                console.log(`Received wrong/random URL. Killing process and retrying in 3 seconds...`);
-                lt.kill();
+                console.log(`Received wrong/random URL. Killing process tree and retrying in 3 seconds...`);
+                exec(`taskkill /pid ${lt.pid} /t /f`, (err) => {
+                    if (err) {
+                        console.log('taskkill completed or process already closed.');
+                    }
+                });
             }
         }
     });

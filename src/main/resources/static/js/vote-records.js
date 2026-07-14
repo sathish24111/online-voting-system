@@ -209,6 +209,32 @@ function startAutoRefresh() {
     refreshInterval = setInterval(fetchVoteRecords, 5000);
 }
 
+async function exportVoteRecords() {
+    if (!activeElectionId) return;
+
+    showToast('Preparing vote audit records Excel sheet...', 'info');
+    try {
+        const response = await fetch(`/api/admin/votes/records/export/excel?electionId=${activeElectionId}`);
+        if (!response.ok) throw new Error("Failed to generate report.");
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `detailed_vote_records_election_${activeElectionId}.xlsx`;
+        
+        document.body.appendChild(a);
+        a.click();
+        
+        window.URL.revokeObjectURL(url);
+        a.remove();
+        showToast('Detailed vote records downloaded successfully.', 'success');
+    } catch (err) {
+        showToast('Error exporting records: ' + err.message, 'error');
+    }
+}
+
 window.addEventListener('beforeunload', () => {
     if (refreshInterval) clearInterval(refreshInterval);
 });

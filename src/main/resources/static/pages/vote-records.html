@@ -140,7 +140,7 @@
                         <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
                     </div>
                 </div>
-                <div>
+                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
                     <select id="sort-select" class="form-control" style="min-width: 180px;">
                         <option value="votedAt-desc">Sort by: Vote Time (Latest)</option>
                         <option value="votedAt-asc">Sort by: Vote Time (Oldest)</option>
@@ -149,6 +149,7 @@
                         <option value="department-asc">Sort by: Department (A-Z)</option>
                         <option value="department-desc">Sort by: Department (Z-A)</option>
                     </select>
+                    <button class="btn btn-secondary" onclick="exportVoteRecords()"><i class="far fa-file-excel text-success"></i> Export Excel</button>
                 </div>
             </div>
 
