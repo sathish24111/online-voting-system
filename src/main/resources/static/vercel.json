@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://breezy-horses-fold.loca.lt/api/:path*"
+      "destination": "https://kprcasitvoting.loca.lt/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://breezy-horses-fold.loca.lt/uploads/:path*"
+      "destination": "https://kprcasitvoting.loca.lt/uploads/:path*"
     }
   ]
 }
