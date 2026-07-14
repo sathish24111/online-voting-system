@@ -55,7 +55,7 @@ public class EmailService {
     @Async
     public void sendOtpEmail(String recipientEmail, String studentName, String otp) {
         String subject = "Department Election Verification OTP";
-        String htmlContent = buildHtmlOtpTemplate(otp);
+        String htmlContent = buildHtmlOtpTemplate().replace("{{OTP}}", otp);
 
         if ("your-email@gmail.com".equalsIgnoreCase(mailUsername)) {
             logOtpConsoleFallback(recipientEmail, studentName, otp, "Default SMTP credentials configured");
@@ -99,9 +99,8 @@ public class EmailService {
         }
     }
 
-    private String buildHtmlOtpTemplate(String otp) {
-        return String.format(
-            "<!DOCTYPE html>\n" +
+    private String buildHtmlOtpTemplate() {
+        return "<!DOCTYPE html>\n" +
             "<html lang=\"en\">\n" +
             "<head>\n" +
             "    <meta charset=\"UTF-8\">\n" +
@@ -142,7 +141,7 @@ public class EmailService {
             "                            <table role=\"presentation\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"background-color: #F3F4F6; border-radius: 8px; width: 100%;\">\n" +
             "                                <tr>\n" +
             "                                    <td align=\"center\" style=\"padding: 24px; font-family: Arial, Helvetica, sans-serif; font-size: 42px; font-weight: bold; color: #1E3A8A; letter-spacing: 10px; text-align: center;\">\n" +
-            "                                        %s\n" +
+            "                                        {{OTP}}\n" +
             "                                    </td>\n" +
             "                                </tr>\n" +
             "                            </table>\n" +
@@ -175,9 +174,7 @@ public class EmailService {
             "        </tr>\n" +
             "    </table>\n" +
             "</body>\n" +
-            "</html>",
-            otp
-        );
+            "</html>";
     }
 
     private void logOtpConsoleFallback(String email, String name, String otp, String reason) {
