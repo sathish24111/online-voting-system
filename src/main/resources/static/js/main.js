@@ -1,5 +1,17 @@
 // Main Global JavaScript
 
+// Global fetch interceptor to bypass localtunnel warning page
+const originalFetch = window.fetch;
+window.fetch = async function (resource, options = {}) {
+    options.headers = options.headers || {};
+    if (options.headers instanceof Headers) {
+        options.headers.set('bypass-tunnel-reminder', 'true');
+    } else {
+        options.headers['bypass-tunnel-reminder'] = 'true';
+    }
+    return originalFetch(resource, options);
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     setupMobileSidebar();
