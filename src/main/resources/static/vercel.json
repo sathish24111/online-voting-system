@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://kprcasitvoting-v2.loca.lt/api/:path*"
+      "destination": "https://app-5a4f4ff6-3b91-4295-9cfd-9aaf748c15e2.cleverapps.io/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://kprcasitvoting-v2.loca.lt/uploads/:path*"
+      "destination": "https://app-5a4f4ff6-3b91-4295-9cfd-9aaf748c15e2.cleverapps.io/uploads/:path*"
     }
   ]
 }
