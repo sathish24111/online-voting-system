@@ -803,3 +803,55 @@ html[data-theme="dark"] .review-table th {
         background: transparent !important;
     }
 }
+
+/* Home Page Responsive Layout and Scroll Overrides */
+body.home-page-body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.home-page-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 769px) {
+    body.home-page-body {
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 768px) {
+    body.home-page-body {
+        height: auto;
+        overflow-y: auto !important;
+    }
+    
+    .home-page-main {
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        justify-content: flex-start;
+    }
+    
+    body.home-page-body h1 {
+        font-size: 1.8rem !important;
+        line-height: 1.3 !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    body.home-page-body p {
+        font-size: 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+}
+
