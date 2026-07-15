@@ -937,4 +937,19 @@ body.login-page-body {
     }
 }
 
+/* Ensure that action buttons inside navbars are never hidden on mobile */
+@media (max-width: 768px) {
+    .navbar .nav-links:not(#nav-menu) {
+        display: flex !important;
+        position: static !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 1rem !important;
+    }
+}
+
+
 
