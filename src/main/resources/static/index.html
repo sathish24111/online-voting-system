@@ -9,7 +9,7 @@
     <!-- Main Style Sheet -->
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
+<body style="height: 100vh; max-height: 100vh; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; margin: 0; box-sizing: border-box;">
     <!-- Decorative Blurry Orbs -->
     <div class="bg-decor decor-1"></div>
     <div class="bg-decor decor-2"></div>
@@ -34,7 +34,7 @@
         </div>
     </nav>
 
-    <main class="container main-content">
+    <main class="container main-content" style="flex: 1; display: flex; flex-direction: column; justify-content: center; margin-top: 0.5rem; margin-bottom: 0.5rem;">
         <!-- Voted Success Banner -->
         <div id="success-banner" class="glass-card mb-5 text-center" style="display: none; border-left: 5px solid var(--success-color); margin-bottom: 2rem;">
             <i class="fas fa-check-circle text-gradient" style="font-size: 3.5rem; margin-bottom: 1rem; color: var(--success-color);"></i>
@@ -93,12 +93,11 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="text-center" style="margin-top: 5rem; padding: 2rem; border-top: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.01);">
-        <p style="margin: 0; font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">
+    <footer class="text-center" style="margin-top: auto; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.01); width: 100%; box-sizing: border-box;">
+        <p style="margin: 0; font-size: 0.85rem; font-weight: 500; color: var(--text-muted);">
             &copy; 2026 Information Technology Department | Department Online Voting System
         </p>
-        <p style="margin: 0.25rem 0 0 0; font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+        <p style="margin: 0.15rem 0 0 0; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">
             KPR College of Arts Science and Research
         </p>
     </footer>
