@@ -7,7 +7,17 @@ let selections = {};
 let positionsList = [];
 let currentStepIndex = 0;
 
-const POSITION_ORDER = ["Secretary", "Joint Secretary", "Treasurer", "Chairman", "Vice Chairman"];
+const POSITION_ORDER = [
+    "president",
+    "vice president",
+    "secretary",
+    "joint secretary",
+    "treasurer",
+    "cultural",
+    "sports",
+    "placement",
+    "brand ambassador"
+];
 
 async function loadVotingPage() {
     const session = await requireSession('STUDENT');
@@ -44,8 +54,8 @@ async function loadVotingPage() {
 
         // Establish positions list
         positionsList = Object.keys(grouped).sort((a, b) => {
-            const idxA = POSITION_ORDER.indexOf(a);
-            const idxB = POSITION_ORDER.indexOf(b);
+            const idxA = POSITION_ORDER.indexOf(a.toLowerCase().trim());
+            const idxB = POSITION_ORDER.indexOf(b.toLowerCase().trim());
             if (idxA !== -1 && idxB !== -1) return idxA - idxB;
             if (idxA !== -1) return -1;
             if (idxB !== -1) return 1;
