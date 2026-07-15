@@ -27,6 +27,12 @@ public class VotingApplication {
     @Value("${app.upload.dir:uploads/}")
     private String uploadDir;
 
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Asia/Kolkata"));
+        logger.info("Spring Boot default timezone set to Asia/Kolkata (IST)");
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(VotingApplication.class, args);
     }
