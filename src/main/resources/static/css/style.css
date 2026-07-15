@@ -1,5 +1,5 @@
 /* Importing Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 /* Color & Variable System */
 :root {
@@ -854,4 +854,78 @@ body.home-page-body {
         margin-bottom: 1.5rem !important;
     }
 }
+
+/* Responsive Login Card Design System */
+body.login-page-body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 50%, rgba(219, 234, 254, 0.4) 0%, rgba(248, 250, 252, 1) 100%);
+    margin: 0;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+.login-card {
+    background: #ffffff; /* Clean white card */
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 24px; /* Rounded corners (20-24px) */
+    box-shadow: 
+        0 4px 6px -1px rgba(37, 99, 235, 0.02), 
+        0 10px 20px -3px rgba(37, 99, 235, 0.04),
+        0 20px 25px -5px rgba(0, 0, 0, 0.03); /* Soft shadow */
+    width: 100%;
+    box-sizing: border-box;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    z-index: 10;
+}
+
+.login-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 10px 25px -5px rgba(37, 99, 235, 0.06), 
+        0 25px 35px -10px rgba(0, 0, 0, 0.04);
+}
+
+/* Width and Padding Breakpoints */
+@media (max-width: 480px) {
+    body.login-page-body {
+        padding: 10px; /* Remove excessive empty space above the login card on mobile */
+        align-items: center; /* Vertically center the card */
+    }
+    
+    .login-card {
+        width: 95%;
+        max-width: 95%;
+        padding: 20px !important; /* Mobile padding: 20px */
+        border-radius: 20px; /* Rounded corners (20-24px) */
+    }
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+    body.login-page-body {
+        padding: 1.5rem;
+    }
+    
+    .login-card {
+        max-width: 420px; /* Tablet max-width: 420px */
+        padding: 32px !important; /* Tablet padding: 32px */
+    }
+}
+
+@media (min-width: 1025px) {
+    body.login-page-body {
+        padding: 2rem;
+    }
+    
+    .login-card {
+        max-width: 440px; /* Desktop max-width: 440px */
+        padding: 32px !important; /* Desktop padding: 32px */
+    }
+}
+
 
