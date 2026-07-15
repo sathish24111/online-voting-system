@@ -868,6 +868,15 @@ body.login-page-body {
     font-family: 'Inter', sans-serif;
 }
 
+.form-control.input-left-icon {
+    padding-left: 2.8rem !important;
+}
+
+.form-control.input-both-icons {
+    padding-left: 2.8rem !important;
+    padding-right: 2.8rem !important;
+}
+
 .login-card {
     background: #ffffff; /* Clean white card */
     border: 1px solid rgba(226, 232, 240, 0.8);
