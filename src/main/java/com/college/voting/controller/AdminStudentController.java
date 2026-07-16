@@ -77,6 +77,17 @@ public class AdminStudentController {
         }
     }
 
+    @DeleteMapping("/all")
+    public ResponseEntity<?> deleteAllStudents(HttpServletRequest request, Principal principal) {
+        try {
+            studentService.deleteAllStudents();
+            auditLogService.log(principal.getName(), "Deleted ALL Students and voting data", request);
+            return ResponseEntity.ok(Map.of("message", "All student and voting records cleared successfully."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
+
     @PostMapping("/{id}/toggle")
     public ResponseEntity<?> toggleStatus(@PathVariable Long id, HttpServletRequest request, Principal principal) {
         try {

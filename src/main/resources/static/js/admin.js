@@ -723,3 +723,27 @@ function openEditElectionModal(id, title, startTime, endTime) {
 function closeElectionModal() {
     document.getElementById('election-modal').style.display = 'none';
 }
+
+async function clearAllStudents() {
+    if (!confirm("⚠️ WARNING: This will permanently delete ALL students, all OTP verification records, and ALL votes cast in all elections! This action cannot be undone.\n\nAre you sure you want to proceed?")) {
+        return;
+    }
+    showLoading(true);
+    try {
+        const response = await fetch('/api/admin/students/all', {
+            method: 'DELETE',
+            headers: { 'X-XSRF-TOKEN': getCsrfToken() }
+        });
+        if (response.ok) {
+            showToast('All student and voting records cleared successfully.', 'success');
+            loadStudentsList();
+        } else {
+            const data = await response.json();
+            showToast(data.error || 'Failed to clear student directory.', 'error');
+        }
+    } catch (e) {
+        showToast('Error clearing student directory.', 'error');
+    } finally {
+        showLoading(false);
+    }
+}

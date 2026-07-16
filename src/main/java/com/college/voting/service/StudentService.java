@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.*;
 
@@ -18,10 +19,12 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JdbcTemplate jdbcTemplate;
 
-    public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
+    public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder, JdbcTemplate jdbcTemplate) {
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Page<Student> getStudents(String search, Pageable pageable) {
@@ -152,5 +155,15 @@ public class StudentService {
         summary.put("logs", importLogs);
 
         return summary;
+    }
+
+    @Transactional
+    public void deleteAllStudents() {
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
+        jdbcTemplate.execute("DELETE FROM votes");
+        jdbcTemplate.execute("DELETE FROM election_participation");
+        jdbcTemplate.execute("DELETE FROM otp_verification");
+        jdbcTemplate.execute("DELETE FROM students");
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
     }
 }
