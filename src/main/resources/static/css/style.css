@@ -951,5 +951,30 @@ body.login-page-body {
     }
 }
 
+/* Logo pill branding layout */
+.logo.logo-pill {
+    display: flex;
+    align-items: center;
+    background: #ffffff !important;
+    padding: 6px 12px !important;
+    border-radius: 12px;
+    height: 38px;
+    box-sizing: border-box;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast);
+}
+
+.logo.logo-pill:hover {
+    transform: scale(1.02);
+}
+
+.logo.logo-pill img {
+    height: 28px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+
 
 
