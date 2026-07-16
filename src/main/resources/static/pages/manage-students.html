@@ -50,7 +50,7 @@
             <!-- Filters & Control bar -->
             <div class="glass-card mb-4" style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <div style="display: flex; gap: 0.5rem; width: 100%; max-width: 400px;">
-                    <input type="text" id="student-search-input" class="form-control" placeholder="Search by name or register number..." onkeyup="searchStudents()">
+                    <input type="text" id="student-search-input" class="form-control" placeholder="Search by name or roll number..." onkeyup="searchStudents()">
                 </div>
                 
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
@@ -74,7 +74,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Register No</th>
+                                <th>Roll No</th>
                                 <th>Student Name</th>
                                 <th>Department</th>
                                 <th>Year</th>
@@ -118,8 +118,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="student-reg-input">Register Number</label>
-                    <input type="text" id="student-reg-input" class="form-control" placeholder="e.g. 2026CSE001" required>
+                    <label class="form-label" for="student-reg-input">Roll Number</label>
+                    <input type="text" id="student-reg-input" class="form-control" placeholder="e.g. 24BIT111" required>
                 </div>
 
                 <div class="form-group">
@@ -181,7 +181,7 @@
     <div id="import-modal" class="modal-overlay">
         <div class="glass-card modal-content" style="max-width: 450px;">
             <h3 class="mb-3">Import Student Directory</h3>
-            <p style="font-size:0.9rem; margin-bottom:1.5rem;">Upload an Excel sheet (.xlsx) or CSV file. The columns must be in order: <code style="font-weight:700; color:var(--primary-color);">RegisterNo, Name, Department, Year, Email, DOB, Password</code></p>
+            <p style="font-size:0.9rem; margin-bottom:1.5rem;">Upload an Excel sheet (.xlsx) or CSV file. The columns must be in order: <code style="font-weight:700; color:var(--primary-color);">RollNo/RegisterNo, Name, Department, Year, Email, DOB, Password</code></p>
             
             <form id="import-form" onsubmit="handleStudentImport(event)">
                 <div class="form-group">
