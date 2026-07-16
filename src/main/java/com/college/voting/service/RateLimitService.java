@@ -44,7 +44,7 @@ public class RateLimitService {
      * Checks if the username is currently blocked due to failed login attempts.
      */
     public boolean isLoginBlocked(String username, String ip) {
-        return checkBlocked(username);
+        return false; // Disable lockout completely as requested
     }
 
     private boolean checkBlocked(String key) {
