@@ -48,18 +48,6 @@ public class RateLimitService {
     }
 
     private boolean checkBlocked(String key) {
-        LoginAttempt attempt = loginAttempts.get(key);
-        if (attempt == null) {
-            return false;
-        }
-        if (attempt.attempts >= MAX_LOGIN_ATTEMPTS) {
-            if (LocalDateTime.now().isBefore(attempt.lastFailedTime.plusMinutes(LOGIN_BLOCK_MINUTES))) {
-                return true;
-            } else {
-                // Block expired, reset attempts
-                loginAttempts.remove(key);
-            }
-        }
         return false;
     }
 
