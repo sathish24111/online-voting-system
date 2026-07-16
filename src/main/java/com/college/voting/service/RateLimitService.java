@@ -41,10 +41,10 @@ public class RateLimitService {
     private static final int OTP_RESEND_COOLDOWN_SECONDS = 30;
 
     /**
-     * Checks if the username or IP is currently blocked due to failed login attempts.
+     * Checks if the username is currently blocked due to failed login attempts.
      */
     public boolean isLoginBlocked(String username, String ip) {
-        return checkBlocked(username) || checkBlocked(ip);
+        return checkBlocked(username);
     }
 
     private boolean checkBlocked(String key) {
@@ -64,11 +64,10 @@ public class RateLimitService {
     }
 
     /**
-     * Records a failed login attempt for both username and IP.
+     * Records a failed login attempt for the username.
      */
     public void loginFailed(String username, String ip) {
         recordFailure(username);
-        recordFailure(ip);
     }
 
     private void recordFailure(String key) {
@@ -91,7 +90,6 @@ public class RateLimitService {
      */
     public void loginSucceeded(String username, String ip) {
         loginAttempts.remove(username);
-        loginAttempts.remove(ip);
     }
 
     /**
