@@ -86,6 +86,10 @@ async function verifyOtp(event) {
         return;
     }
 
+    const form = event.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
     showLoading(true);
     try {
         const response = await fetch('/api/auth/otp/verify', {
@@ -111,6 +115,7 @@ async function verifyOtp(event) {
         showToast('Verification failed. Server unreachable.', 'error');
     } finally {
         showLoading(false);
+        if (submitBtn) submitBtn.disabled = false;
     }
 }
 
