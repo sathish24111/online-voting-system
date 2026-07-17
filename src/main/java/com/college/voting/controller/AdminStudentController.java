@@ -25,10 +25,12 @@ public class AdminStudentController {
 
     private final StudentService studentService;
     private final AuditLogService auditLogService;
+    private final com.college.voting.service.RateLimitService rateLimitService;
 
-    public AdminStudentController(StudentService studentService, AuditLogService auditLogService) {
+    public AdminStudentController(StudentService studentService, AuditLogService auditLogService, com.college.voting.service.RateLimitService rateLimitService) {
         this.studentService = studentService;
         this.auditLogService = auditLogService;
+        this.rateLimitService = rateLimitService;
     }
 
     @GetMapping
@@ -106,6 +108,17 @@ public class AdminStudentController {
             studentService.resetPassword(id, newPassword);
             auditLogService.log(principal.getName(), "Reset Password for Student ID: " + id, request);
             return ResponseEntity.ok(Map.of("message", "Password reset successfully."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/{id}/reset-otp-limit")
+    public ResponseEntity<?> resetOtpLimit(@PathVariable Long id, HttpServletRequest request, Principal principal) {
+        try {
+            rateLimitService.resetOtpRequests(id);
+            auditLogService.log(principal.getName(), "Reset OTP limit for Student ID: " + id, request);
+            return ResponseEntity.ok(Map.of("message", "OTP limits reset successfully."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }

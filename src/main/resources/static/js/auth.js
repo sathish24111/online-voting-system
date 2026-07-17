@@ -120,7 +120,7 @@ async function verifyOtp(event) {
 }
 
 let resendTimer = null;
-function startOtpTimer(seconds = 30) {
+function startOtpTimer(seconds = 60) {
     const resendBtn = document.getElementById('resend-btn');
     if (!resendBtn) return;
     
@@ -156,7 +156,7 @@ async function resendOtp() {
 
         if (response.ok) {
             showToast('A new OTP has been dispatched to your email.', 'success');
-            startOtpTimer(30);
+            startOtpTimer(60);
         } else {
             showToast(data.message || 'Resend request failed.', 'error');
         }

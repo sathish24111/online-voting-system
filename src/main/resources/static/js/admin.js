@@ -118,9 +118,10 @@ async function loadStudentsList() {
                 </td>
                 <td>
                     <div style="display:flex; gap:0.5rem;">
-                        <button class="btn btn-secondary" style="padding:0.25rem 0.5rem;" onclick="openEditStudentModal(${s.id}, '${s.name}', '${s.registerNo}', '${s.department}', '${s.year}', '${s.email}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-secondary" style="padding:0.25rem 0.5rem;" onclick="openResetPasswordModal(${s.id}, '${s.name}')"><i class="fas fa-key"></i></button>
-                        <button class="btn btn-danger" style="padding:0.25rem 0.5rem;" onclick="deleteStudent(${s.id})"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-secondary" style="padding:0.25rem 0.5rem;" title="Edit Student" onclick="openEditStudentModal(${s.id}, '${s.name}', '${s.registerNo}', '${s.department}', '${s.year}', '${s.email}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-secondary" style="padding:0.25rem 0.5rem;" title="Reset Password" onclick="openResetPasswordModal(${s.id}, '${s.name}')"><i class="fas fa-key"></i></button>
+                        <button class="btn btn-secondary" style="padding:0.25rem 0.5rem; background-color: #d97706; color: white;" title="Reset OTP Limits" onclick="resetStudentOtpLimit(${s.id}, '${s.name}')"><i class="fas fa-redo-alt"></i></button>
+                        <button class="btn btn-danger" style="padding:0.25rem 0.5rem;" title="Delete Student" onclick="deleteStudent(${s.id})"><i class="fas fa-trash"></i></button>
                     </div>
                 </td>
             `;
@@ -743,6 +744,31 @@ async function clearAllStudents() {
         }
     } catch (e) {
         showToast('Error clearing student directory.', 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+async function resetStudentOtpLimit(id, name) {
+    if (!confirm(`Are you sure you want to reset OTP resend limit for student ${name}?`)) {
+        return;
+    }
+    showLoading(true);
+    try {
+        const response = await fetch(`/api/admin/students/${id}/reset-otp-limit`, {
+            method: 'POST',
+            headers: {
+                'X-XSRF-TOKEN': getCsrfToken()
+            }
+        });
+        const data = await response.json();
+        if (response.ok) {
+            showToast(`OTP limits reset successfully for ${name}.`, 'success');
+        } else {
+            showToast(data.error || 'Failed to reset OTP limits.', 'error');
+        }
+    } catch (e) {
+        showToast('Error resetting OTP limits.', 'error');
     } finally {
         showLoading(false);
     }

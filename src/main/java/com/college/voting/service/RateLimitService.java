@@ -2,6 +2,7 @@ package com.college.voting.service;
 
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,8 +38,8 @@ public class RateLimitService {
     private static final int MAX_LOGIN_ATTEMPTS = 5;
     private static final int LOGIN_BLOCK_MINUTES = 15;
     
-    private static final int MAX_OTP_REQUESTS = 3;
-    private static final int OTP_RESEND_COOLDOWN_SECONDS = 30;
+    private static final int MAX_OTP_REQUESTS = 2;
+    private static final int OTP_RESEND_COOLDOWN_SECONDS = 60;
 
     /**
      * Checks if the username is currently blocked due to failed login attempts.
@@ -81,21 +82,40 @@ public class RateLimitService {
     }
 
     /**
-     * Checks if the student is blocked from requesting a new OTP (cooldown or max requests).
+     * Gets the human-readable block reason if a student is throttled or locked out.
+     * Returns null if they are not blocked.
      */
-    public boolean isOtpRequestBlocked(Long studentId) {
+    public String getOtpBlockReason(Long studentId) {
         OtpAttempt attempt = otpAttempts.get(studentId);
         if (attempt == null) {
-            return false;
+            return null;
         }
         
-        // Cooldown period (30 seconds)
+        // 1. Cooldown period (60 seconds)
         if (LocalDateTime.now().isBefore(attempt.lastRequestTime.plusSeconds(OTP_RESEND_COOLDOWN_SECONDS))) {
-            return true;
+            long remainingSecs = OTP_RESEND_COOLDOWN_SECONDS - Duration.between(attempt.lastRequestTime, LocalDateTime.now()).toSeconds();
+            return "OTP resend is on cooldown. Please wait " + Math.max(1, remainingSecs) + " seconds.";
         }
         
-        // Max limit (3 resends)
-        return attempt.count >= MAX_OTP_REQUESTS;
+        // 2. Max limit (2 resends)
+        if (attempt.count >= MAX_OTP_REQUESTS) {
+            // Block further resends for 5 minutes
+            if (LocalDateTime.now().isAfter(attempt.lastRequestTime.plusMinutes(5))) {
+                return null; // 5 minutes have passed, block expired
+            }
+            long remainingSecs = 300 - Duration.between(attempt.lastRequestTime, LocalDateTime.now()).toSeconds();
+            long remainingMins = (remainingSecs + 59) / 60;
+            return "You have exceeded the maximum of 2 OTP resends. Further resends are blocked for " + Math.max(1, remainingMins) + " minutes, or until an administrator resets it.";
+        }
+        
+        return null;
+    }
+
+    /**
+     * Checks if the student is blocked from requesting a new OTP.
+     */
+    public boolean isOtpRequestBlocked(Long studentId) {
+        return getOtpBlockReason(studentId) != null;
     }
 
     /**
@@ -104,6 +124,10 @@ public class RateLimitService {
     public void recordOtpRequest(Long studentId) {
         otpAttempts.compute(studentId, (k, v) -> {
             if (v == null) {
+                return new OtpAttempt(1, LocalDateTime.now());
+            }
+            // If the 5-minute block has expired, reset count to 1
+            if (v.count >= MAX_OTP_REQUESTS && LocalDateTime.now().isAfter(v.lastRequestTime.plusMinutes(5))) {
                 return new OtpAttempt(1, LocalDateTime.now());
             }
             v.count++;

@@ -189,10 +189,11 @@ public class AuthController {
 
         Student student = studentOpt.get();
 
-        if (rateLimitService.isOtpRequestBlocked(student.getId())) {
-            auditLogService.log(registerNo, "OTP Resend blocked - Rate limit reached", request);
+        String blockReason = rateLimitService.getOtpBlockReason(student.getId());
+        if (blockReason != null) {
+            auditLogService.log(registerNo, "OTP Resend blocked: " + blockReason, request);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-                .body(Map.of("error", "Too Many Requests", "message", "OTP request throttled. Please wait 30 seconds or log in again."));
+                .body(Map.of("error", "Too Many Requests", "message", blockReason));
         }
 
         try {
