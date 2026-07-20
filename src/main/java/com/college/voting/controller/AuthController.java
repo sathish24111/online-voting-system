@@ -7,6 +7,8 @@ import com.college.voting.repository.StudentRepository;
 import com.college.voting.service.AuditLogService;
 import com.college.voting.service.OtpService;
 import com.college.voting.service.RateLimitService;
+import com.college.voting.service.ElectionService;
+import com.college.voting.entity.Election;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -33,17 +35,20 @@ public class AuthController {
     private final OtpService otpService;
     private final RateLimitService rateLimitService;
     private final AuditLogService auditLogService;
+    private final ElectionService electionService;
 
     public AuthController(AuthenticationManager authenticationManager,
                           StudentRepository studentRepository,
                           OtpService otpService,
                           RateLimitService rateLimitService,
-                          AuditLogService auditLogService) {
+                          AuditLogService auditLogService,
+                          ElectionService electionService) {
         this.authenticationManager = authenticationManager;
         this.studentRepository = studentRepository;
         this.otpService = otpService;
         this.rateLimitService = rateLimitService;
         this.auditLogService = auditLogService;
+        this.electionService = electionService;
     }
 
     @PostMapping("/login")
@@ -74,6 +79,20 @@ public class AuthController {
                     .body(Map.of("error", "Unauthorized", "message", "Student record not found."));
             }
             Student student = studentOpt.get();
+
+            // Check if there is an active election and if it restricts voting to a specific year
+            Optional<Election> activeElectionOpt = electionService.getActiveElection();
+            if (activeElectionOpt.isPresent()) {
+                Election activeElection = activeElectionOpt.get();
+                String allowedYear = activeElection.getAllowedYear();
+                if (allowedYear != null && !allowedYear.equalsIgnoreCase("ALL")) {
+                    if (!allowedYear.equalsIgnoreCase(student.getYear())) {
+                        auditLogService.log(username, "Login Blocked - Restricted year (Student: " + student.getYear() + ", Allowed: " + allowedYear + ")", request);
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(Map.of("error", "Access Denied", "message", "Access Denied: Voting is currently restricted to " + allowedYear + " students."));
+                    }
+                }
+            }
 
             // 5. Generate and dispatch OTP
             otpService.generateAndSendOtp(student);

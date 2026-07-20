@@ -23,6 +23,9 @@ public class Election {
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
+    @Column(name = "allowed_year", nullable = false, length = 20)
+    private String allowedYear = "ALL";
+
     public Election() {}
 
     public Long getId() {
@@ -63,5 +66,13 @@ public class Election {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public String getAllowedYear() {
+        return allowedYear;
+    }
+
+    public void setAllowedYear(String allowedYear) {
+        this.allowedYear = allowedYear;
     }
 }

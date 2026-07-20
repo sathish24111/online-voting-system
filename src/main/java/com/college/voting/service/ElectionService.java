@@ -31,6 +31,9 @@ public class ElectionService {
         if (election.getStartTime().isAfter(election.getEndTime())) {
             throw new RuntimeException("Start time must be before end time.");
         }
+        if (election.getAllowedYear() == null || election.getAllowedYear().trim().isEmpty()) {
+            election.setAllowedYear("ALL");
+        }
         election.setStatus("NOT_STARTED");
         return electionRepository.save(election);
     }
@@ -47,6 +50,10 @@ public class ElectionService {
         election.setTitle(details.getTitle());
         election.setStartTime(details.getStartTime());
         election.setEndTime(details.getEndTime());
+        
+        if (details.getAllowedYear() != null && !details.getAllowedYear().trim().isEmpty()) {
+            election.setAllowedYear(details.getAllowedYear());
+        }
         
         return electionRepository.save(election);
     }

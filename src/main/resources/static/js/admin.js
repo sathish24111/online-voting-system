@@ -518,11 +518,22 @@ async function loadElectionSettings() {
                 actionButtons = `<span style="font-weight:600; color:var(--text-muted);">Published</span>`;
             }
 
+            const allowedSelect = `
+                <select class="form-control" style="width:130px; padding:0.25rem; font-size:0.85rem;" onchange="changeAllowedYear(${e.id}, this.value)">
+                    <option value="ALL" ${e.allowedYear==='ALL'?'selected':''}>All Years</option>
+                    <option value="I Year" ${e.allowedYear==='I Year'?'selected':''}>I Year Only</option>
+                    <option value="II Year" ${e.allowedYear==='II Year'?'selected':''}>II Year Only</option>
+                    <option value="III Year" ${e.allowedYear==='III Year'?'selected':''}>III Year Only</option>
+                    <option value="IV Year" ${e.allowedYear==='IV Year'?'selected':''}>IV Year Only</option>
+                </select>
+            `;
+
             tr.innerHTML = `
                 <td>${e.title}</td>
                 <td>
                     <span style="font-weight:700; color:${e.status==='RUNNING'?'var(--success-color)':(e.status==='PAUSED'?'var(--warning-color)':'var(--text-muted)')}">${e.status}</span>
                 </td>
+                <td>${allowedSelect}</td>
                 <td>${start}</td>
                 <td>${end}</td>
                 <td>
@@ -532,7 +543,7 @@ async function loadElectionSettings() {
                 </td>
                 <td>
                     <div style="display:flex; gap:0.5rem;">
-                        <button class="btn btn-secondary" style="padding:0.25rem 0.5rem;" onclick="openEditElectionModal(${e.id}, '${e.title}', '${e.startTime}', '${e.endTime}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-secondary" style="padding:0.25rem 0.5rem;" onclick="openEditElectionModal(${e.id}, '${e.title}', '${e.startTime}', '${e.endTime}', '${e.allowedYear}')"><i class="fas fa-edit"></i></button>
                         <button class="btn btn-danger" style="padding:0.25rem 0.5rem;" onclick="deleteElection(${e.id})"><i class="fas fa-trash"></i></button>
                     </div>
                 </td>
@@ -553,8 +564,9 @@ async function saveElection(event) {
     const title = document.getElementById('election-title-input').value.trim();
     const startTime = document.getElementById('election-start-input').value;
     const endTime = document.getElementById('election-end-input').value;
+    const allowedYear = document.getElementById('election-allowed-input').value;
 
-    const payload = { title, startTime, endTime };
+    const payload = { title, startTime, endTime, allowedYear };
     const method = id ? 'PUT' : 'POST';
     const url = id ? `/api/admin/elections/${id}` : '/api/admin/elections';
 
@@ -602,6 +614,38 @@ async function changeElectionStatus(id, targetStatus) {
         } else {
             const data = await response.json();
             showToast(data.error || 'Status change failed.', 'error');
+        }
+    } catch (e) {
+        showToast('Request failed. Connection lost.', 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+async function changeAllowedYear(id, value) {
+    showLoading(true);
+    try {
+        // Fetch existing election to preserve details, updating only allowedYear
+        const getRes = await fetch(`/api/admin/elections/${id}`);
+        const election = await getRes.json();
+        
+        election.allowedYear = value;
+        
+        const updateRes = await fetch(`/api/admin/elections/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': getCsrfToken()
+            },
+            body: JSON.stringify(election)
+        });
+        
+        if (updateRes.ok) {
+            showToast(`Allowed year class updated to: ${value === 'ALL' ? 'All Years' : value}`, 'success');
+            loadElectionSettings();
+        } else {
+            const data = await updateRes.json();
+            showToast(data.error || 'Failed to update permitted year.', 'error');
         }
     } catch (e) {
         showToast('Request failed. Connection lost.', 'error');
@@ -710,7 +754,7 @@ function openAddElectionModal() {
     document.getElementById('election-modal').style.display = 'flex';
 }
 
-function openEditElectionModal(id, title, startTime, endTime) {
+function openEditElectionModal(id, title, startTime, endTime, allowedYear) {
     document.getElementById('election-modal-title').innerText = "Edit Election Times";
     document.getElementById('election-id').value = id;
     document.getElementById('election-title-input').value = title;
@@ -718,6 +762,7 @@ function openEditElectionModal(id, title, startTime, endTime) {
     // Format LocalDateTime string (YYYY-MM-DDTHH:MM) for HTML datetime-local input
     document.getElementById('election-start-input').value = startTime.substring(0, 16);
     document.getElementById('election-end-input').value = endTime.substring(0, 16);
+    document.getElementById('election-allowed-input').value = allowedYear || "ALL";
     document.getElementById('election-modal').style.display = 'flex';
 }
 
