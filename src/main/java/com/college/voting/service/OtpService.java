@@ -49,7 +49,7 @@ public class OtpService {
 
         OtpVerification verification = optVerification.get();
 
-        if (verification.getAttempts() >= 5) {
+        if (verification.getAttempts() >= 2) {
             otpRepository.delete(verification);
             throw new RuntimeException("Maximum OTP attempts exceeded. Please login again.");
         }
@@ -60,7 +60,7 @@ public class OtpService {
             return true;
         } else {
             verification.setAttempts(verification.getAttempts() + 1);
-            if (verification.getAttempts() >= 5) {
+            if (verification.getAttempts() >= 2) {
                 otpRepository.delete(verification);
                 throw new RuntimeException("Maximum OTP attempts exceeded. Please login again.");
             } else {
